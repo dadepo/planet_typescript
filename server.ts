@@ -1,6 +1,7 @@
 import {Application, Router, RouterContext}  from "https://deno.land/x/oak@v6.5.0/mod.ts"
 import {renderFileToString} from "https://deno.land/x/dejs@0.9.3/mod.ts"
-import { indexHandler, submitHandler } from "./handlers/handlers.ts";
+import { indexHandler, submitHandler, submitHandlerProcessor } from "./handlers/handlers.ts";
+
 
 const app = new Application()
 const router = new Router();
@@ -10,7 +11,9 @@ router.get("/", indexHandler)
 
 router.get("/index", indexHandler)
 
+
 router.get("/submit", submitHandler)
+router.post("/submit", submitHandlerProcessor)
 
 // Find a better way for a fall through
 // this depends on the location
@@ -27,4 +30,17 @@ app.addEventListener("error", evt => {
     console.log(evt.error);
 })
 
+app.addEventListener("listen", evt => {
+    // on server up, starts polling rss
+    new Worker(new URL("workers/poll_rss.ts", import.meta.url).href, { 
+        type: "module",
+        deno: {
+            namespace: true,
+        }
+    });
+
+})
+
 await app.listen({ port: 4300 });
+
+console.log(123)
