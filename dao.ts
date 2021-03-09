@@ -32,6 +32,10 @@ export const getAllLinks = () => {
     }
 }
 
+export const getPostsByIndexAndSize = (index: number, size: number) => {
+    return db.query("SELECT * from relevant_post limit ?,?", [index, size])
+}
+
 export const savePost = (source: string, title: string, summary: string) => {    
     try {
         db.query("INSERT INTO relevant_post(source, title, summary, timestamp) VALUES (?, ?, ?, ?)", [source, title, summary, Date.now()])

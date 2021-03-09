@@ -1,1 +1,16 @@
-Home page
+<html>
+    <head></head>
+    <body>
+        <ul>
+            <% for(var i=0; i < links.length; i++) { %>
+                <li>
+                    <%= links[i].title %> <br/>
+                    <%= links[i].source %> <br/>
+                    <%= links[i].summary %> <br/>
+                    <hr/>
+                </li>
+            
+             <% } %>
+            </ul>
+    </body>
+</html>

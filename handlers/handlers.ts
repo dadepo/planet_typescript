@@ -1,10 +1,14 @@
 import {RouterContext}  from "https://deno.land/x/oak@v6.5.0/mod.ts"
 import {renderFileToString} from "https://deno.land/x/dejs@0.9.3/mod.ts"
-import { submitLink } from "../dao.ts"
+import { submitLink, getPostsByIndexAndSize } from "../dao.ts"
 
 
 export const indexHandler = async (ctx: RouterContext) => {
-    ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/home.ejs`, {})
+    let offset = ctx.request.url.searchParams.get("offset")  ?? 0
+    let limit = ctx.request.url.searchParams.get("limit") ?? 10
+    
+    const links = [...getPostsByIndexAndSize(offset as number, limit as number).asObjects()]
+    ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/home.ejs`, {links: links})
 }
 
 export const submitHandler = async (ctx: RouterContext) => {
