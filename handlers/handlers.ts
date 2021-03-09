@@ -1,6 +1,6 @@
 import {RouterContext}  from "https://deno.land/x/oak@v6.5.0/mod.ts"
 import {renderFileToString} from "https://deno.land/x/dejs@0.9.3/mod.ts"
-import { submitLink, getPostsByIndexAndSize } from "../dao.ts"
+import { submitLink, getPostsByIndexAndSize, getVoteInfo, updateVoteInfo } from "../dao.ts"
 
 
 export const indexHandler = async (ctx: RouterContext) => {
@@ -8,8 +8,42 @@ export const indexHandler = async (ctx: RouterContext) => {
     let limit = ctx.request.url.searchParams.get("limit") ?? 10
     
     const links = [...getPostsByIndexAndSize(offset as number, limit as number).asObjects()]
-    ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/home.ejs`, {links: links})
+    
+    ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/home.ejs`, {
+        links: links
+    })
 }
+
+export const postVoteHandler = async (ctx: RouterContext) => {
+    let response: {
+        id: number,
+        value: -1 | 0 | 1
+    } = await ctx.request.body({type: "json"}).value
+
+    let postId = response.id
+    let voteValue = response.value
+    let votersIP = ctx.request.headers.get('host') as string
+
+
+    // learn more about destructing assignment and refactor
+    const [[_, currentVote]] = getVoteInfo(postId, votersIP)
+    // take care the case where post does not even exit
+    voteValue = currentVote ? (voteValue + currentVote) : voteValue
+    if (isVoteValid(voteValue, currentVote)) {
+        try {
+            updateVoteInfo(postId, votersIP, voteValue)
+            ctx.response.body = {postId, voteValue, votersIP}
+        } catch(exception) {
+            console.log(exception)
+            ctx.response.status = 501
+            // TODO return error message
+        }
+        return
+    } else {
+        ctx.response.status = 400
+    }
+}
+
 
 export const submitHandler = async (ctx: RouterContext) => {
     ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/submit.ejs`, {})
@@ -37,4 +71,13 @@ export const submitHandlerProcessor = async (ctx: RouterContext) => {
         ctx.response.body = "Something went wrong"
     }
 
+}
+
+
+const isVoteValid = (voteValue: number, currentVote: number): boolean => {
+    if (currentVote === 0) {
+        return true
+    } else {
+        return [-1, 0, 1].includes(voteValue) && voteValue !== currentVote
+    }
 }

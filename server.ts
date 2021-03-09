@@ -1,6 +1,6 @@
 import {Application, Router, RouterContext}  from "https://deno.land/x/oak@v6.5.0/mod.ts"
 import {renderFileToString} from "https://deno.land/x/dejs@0.9.3/mod.ts"
-import { indexHandler, submitHandler, submitHandlerProcessor } from "./handlers/handlers.ts";
+import { indexHandler, submitHandler, submitHandlerProcessor, postVoteHandler } from "./handlers/handlers.ts";
 
 
 const app = new Application()
@@ -11,8 +11,9 @@ router.get("/", indexHandler)
 
 router.get("/index", indexHandler)
 
-
 router.get("/submit", submitHandler)
+
+router.post("/vote", postVoteHandler)
 router.post("/submit", submitHandlerProcessor)
 
 // Find a better way for a fall through

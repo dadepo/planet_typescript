@@ -9,7 +9,7 @@ db.query("CREATE TABLE IF NOT EXISTS rss_links (id INTEGER PRIMARY KEY AUTOINCRE
 // contains polled rss validated feeds 
 db.query("CREATE TABLE IF NOT EXISTS relevant_post (id INTEGER PRIMARY KEY AUTOINCREMENT, source TEXT UNIQUE, title TEXT, summary TEXT, timestamp INTEGER)");
 // TODO what does on conflict replace mean
-db.query("CREATE TABLE IF NOT EXISTS votes (rss_id INTEGER, votes INTEGER, ip TEXT, UNIQUE(rss_id, ip) ON CONFLICT REPLACE)");
+db.query("CREATE TABLE IF NOT EXISTS votes (post_id INTEGER, votes INTEGER, voters_ip TEXT, UNIQUE(post_id, voters_ip) ON CONFLICT REPLACE)");
 
 
 
@@ -33,7 +33,7 @@ export const getAllLinks = () => {
 }
 
 export const getPostsByIndexAndSize = (index: number, size: number) => {
-    return db.query("SELECT * from relevant_post limit ?,?", [index, size])
+    return db.query("SELECT * from relevant_post r LEFT JOIN votes v ON r.id = v.post_id limit ?,?", [index, size])
 }
 
 export const savePost = (source: string, title: string, summary: string) => {    
@@ -71,4 +71,12 @@ export const submitLink = (rssLink: string) => {
 
 export const getSubmissions = () => {
     return db.query("SELECT * FROM rss_submissions")
+}
+
+export const getVoteInfo = (postId: number, votersIP: string) => {
+    return db.query("SELECT * from votes where post_id = (?) and voters_ip = (?)", [postId, votersIP])
+}
+
+export const updateVoteInfo = (postId: number, votersIP: string, vote: number) => {
+    return db.query("REPLACE INTO votes (post_id, votes, voters_ip) VALUES (?, ?, ?)", [postId, vote, votersIP])
 }
