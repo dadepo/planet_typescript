@@ -43,5 +43,3 @@ app.addEventListener("listen", evt => {
 })
 
 await app.listen({ port: 4300 });
-
-console.log(123)

@@ -1,12 +1,35 @@
 import {RouterContext}  from "https://deno.land/x/oak@v6.5.0/mod.ts"
 import {renderFileToString} from "https://deno.land/x/dejs@0.9.3/mod.ts"
 import { submitLink, getPostsByIndexAndSize, getVoteInfo, updateVoteInfo } from "../dao.ts"
+import * as log from "https://deno.land/std@0.90.0/log/mod.ts";
 
+
+// custom configuration with 2 loggers (the default and `tasks` loggers).
+await log.setup({
+    handlers: {  
+      file: new log.handlers.FileHandler("INFO", {
+        filename: "./log.txt",
+        // you can change format of output message using any keys in `LogRecord`.
+        formatter: "{datetime} {msg}",
+      }),
+    },
+  
+    loggers: {
+      // configure default logger available via short-hand methods above.
+      default: {
+        level: "INFO",
+        handlers: ["file"],
+      },
+    },
+  });
+
+
+const logger = log.getLogger();
 
 export const indexHandler = async (ctx: RouterContext) => {
     let offset = ctx.request.url.searchParams.get("offset")  ?? 0
     let limit = ctx.request.url.searchParams.get("limit") ?? 10
-    
+    logger.info("hello world")
     const links = [...getPostsByIndexAndSize(offset as number, limit as number).asObjects()]
     
     ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/home.ejs`, {

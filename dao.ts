@@ -3,7 +3,7 @@ import { DB } from "https://deno.land/x/sqlite@v2.3.2/mod.ts"
 const db = new DB("tsfeed.db");
 // maybe remove valid BOOLEAN
 // contains stuff (links) people submitted
-db.query("CREATE TABLE IF NOT EXISTS rss_submissions (id INTEGER PRIMARY KEY AUTOINCREMENT, link TEXT, timestamp INTEGER, valid BOOLEAN)");
+db.query("CREATE TABLE IF NOT EXISTS pending_submissions (id INTEGER PRIMARY KEY AUTOINCREMENT, link TEXT, timestamp INTEGER, valid BOOLEAN)");
 // contains the links that has been validated to be rss links
 db.query("CREATE TABLE IF NOT EXISTS rss_links (id INTEGER PRIMARY KEY AUTOINCREMENT, link TEXT UNIQUE, timestamp INTEGER)");
 // contains polled rss validated feeds 
@@ -16,12 +16,16 @@ db.query("CREATE TABLE IF NOT EXISTS votes (post_id INTEGER, votes INTEGER, vote
 export const saveLink = (rssLink: string) => {
     try {
         db.query("INSERT INTO rss_links (link, timestamp) VALUES (?, ?)", [rssLink, Date.now()]);
-        console.log("added")
+        console.log("added to rss_link", rssLink)
         return true
     } catch(e) {
         console.log(e)
         return false
     }
+}
+
+export const updateLink = (oldLink: string, newLink: string) => {    
+    return db.query("UPDATE rss_links SET link = (?) where link = (?)", [newLink, oldLink])
 }
 
 export const getAllLinks = () => {
@@ -60,9 +64,9 @@ export const notAlreadySaved = (source: string) => {
 
 export const submitLink = (rssLink: string) => {
     // check link is not already submitted
-    const [count] = db.query("SELECT count(*) FROM rss_submissions where link=(?)", [rssLink]);
+    const [count] = db.query("SELECT count(*) FROM pending_submissions where link=(?)", [rssLink]);
     if (count[0] === 0) {
-        db.query("INSERT INTO rss_submissions (link, timestamp, valid) VALUES (?, ?, ?)", [rssLink, Date.now(), false]);
+        db.query("INSERT INTO pending_submissions (link, timestamp, valid) VALUES (?, ?, ?)", [rssLink, Date.now(), false]);
         return true;
     } else {
         return false;
@@ -70,7 +74,7 @@ export const submitLink = (rssLink: string) => {
 }
 
 export const getSubmissions = () => {
-    return db.query("SELECT * FROM rss_submissions")
+    return db.query("SELECT * FROM pending_submissions")
 }
 
 export const getVoteInfo = (postId: number, votersIP: string) => {

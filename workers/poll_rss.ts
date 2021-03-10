@@ -1,5 +1,5 @@
-import { deserializeFeed, FeedType } from 'https://deno.land/x/rss@0.3.3/mod.ts';
-import { DOMParser, Element } from "https://deno.land/x/deno_dom@v0.1.6-alpha/deno-dom-wasm.ts";
+import { deserializeFeed, FeedType, RSS1, RSS2, Feed } from 'https://deno.land/x/rss@0.3.3/mod.ts';
+import { DOMParser } from "https://deno.land/x/deno_dom@v0.1.6-alpha/deno-dom-wasm.ts";
 import { savePost, notAlreadySaved, getAllLinks } from "../dao.ts";
 
 
@@ -26,14 +26,59 @@ async function wait(ms: number) {
     });
 }
 
+
+const isAtom = (input: any): input is Feed => {
+    return "entries" in input
+}
+
+const isRss1 = (input: any): input is RSS1 => {
+    return "channel" in input
+}
+
+const isRss2 = (input: any): input is RSS2 => {
+    return "version" in input
+}
+
+type Item = {title: string, summary: string, url: string}
+
 const poll_rss_link = async (rssLink: string) => {
     const xml = await fetch(rssLink).then(resp => resp.text())
-    const { feed } = await deserializeFeed(xml, { outputJsonFeed: true });
-  
-    for (const item of feed.items) {
-        let title = item.title as string
-        let summary = item.summary as string ?? ""
-        let url = item.id as string
+    const { feed, feedType } = await deserializeFeed(xml);
+
+    let items: Item[] = []
+
+    if (isAtom(feed)) {
+        feed.entries.forEach(element => {
+            items.push({
+                title: element.title.value ?? "",
+                summary: element.content?.value?.split(" ").splice(0, 30).join(" ") ?? "",
+                url: element.id ?? ""
+            })
+        });
+    } else if (isRss1(feed)) {
+        feed.channel.items.forEach(element => {
+            items.push({
+                title: element.title ?? "",
+                summary: element.description?.split(" ").splice(0, 30).join(" ") ?? "",
+                url: element.link ?? ""
+            })
+        })
+    } else if (isRss2(feed)) {
+        feed.channel.items.forEach(element => {
+            items.push({
+                title: element.title ?? "",
+                summary: element.description?.split(" ").splice(0, 30).join(" ") ?? "",
+                url: element.link ?? ""
+            })
+        })
+    } else {
+        console.log(4, feedType)
+    }
+
+    for (const item of items) {
+        let title = item.title
+        let summary = item.summary
+        let url = item.url
 
         let doc: any = domParser.parseFromString(summary, "text/html")
         let relevant = isRelevant(title, doc.textContent)
@@ -49,13 +94,14 @@ const poll_rss_link = async (rssLink: string) => {
 }
 
 
-
-
-setInterval(() => {
-
+const poll = () => {
     for (const [link] of getAllLinks()) {
         poll_rss_link(link)
     }
+}
 
-}, 30*60000);
+poll()
+setInterval(() => {
+    poll()
+}, 120000);
 
