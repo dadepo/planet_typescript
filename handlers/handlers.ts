@@ -40,18 +40,25 @@ export const indexHandler = async (ctx: RouterContext) => {
 export const postVoteHandler = async (ctx: RouterContext) => {
     let response: {
         id: number,
-        value: -1 | 0 | 1
+        value:number
     } = await ctx.request.body({type: "json"}).value
 
     let postId = response.id
     let voteValue = response.value
     let votersIP = ctx.request.headers.get('host') as string
+    let currentVote = 0
 
 
     // learn more about destructing assignment and refactor
-    const [[_, currentVote]] = getVoteInfo(postId, votersIP)
+
+    const result = getVoteInfo(postId, votersIP)
+
+    if (result) {
+        currentVote = [...result][0][1]
+    }
+    console.log(currentVote, voteValue)
     // take care the case where post does not even exit
-    voteValue = currentVote ? (voteValue + currentVote) : voteValue
+    voteValue = voteValue + currentVote
     if (isVoteValid(voteValue, currentVote)) {
         try {
             updateVoteInfo(postId, votersIP, voteValue)
