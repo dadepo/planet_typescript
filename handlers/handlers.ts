@@ -1,5 +1,7 @@
-import {RouterContext}  from "https://deno.land/x/oak@v6.5.0/mod.ts"
-import {renderFileToString} from "https://deno.land/x/dejs@0.9.3/mod.ts"
+import {RouterContext}  from "../deps.ts";
+import {renderFileToString} from "../deps.ts"
+import { log } from "../deps.ts"
+
 
 import { RelevantPostDoa } from "../doa/relevant_post_doa.ts"
 import { VoteDoa } from "../doa/votes_doa.ts"
@@ -7,7 +9,6 @@ import { PendingSubmissionDao } from "../doa/pending_submission_doa.ts"
 
 import { db } from "../doa/db_connection.ts"
 
-import * as log from "https://deno.land/std@0.90.0/log/mod.ts";
 
 
 const pendingDoa = new PendingSubmissionDao(db)
@@ -34,12 +35,9 @@ await log.setup({
   });
 
 
-const logger = log.getLogger();
-
 export const indexHandler = async (ctx: RouterContext) => {
     let offset = ctx.request.url.searchParams.get("offset")  ?? 0
     let limit = ctx.request.url.searchParams.get("limit") ?? 10
-    logger.info("hello world")
     const links = [...relevantPostDoa.getPostsByIndexAndSize(offset as number, limit as number).asObjects()]
     
     ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/home.ejs`, {

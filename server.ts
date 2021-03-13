@@ -1,5 +1,4 @@
-import {Application, Router, RouterContext}  from "https://deno.land/x/oak@v6.5.0/mod.ts"
-import {renderFileToString} from "https://deno.land/x/dejs@0.9.3/mod.ts"
+import { Application, Router, RouterContext }  from "./deps.ts"
 import { indexHandler, submitHandler, submitHandlerProcessor, postVoteHandler } from "./handlers/handlers.ts";
 
 

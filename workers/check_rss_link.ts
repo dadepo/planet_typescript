@@ -1,6 +1,10 @@
-import { deserializeFeed } from 'https://deno.land/x/rss@0.3.3/mod.ts';
-import { saveLink, updateLink } from "../dao.ts";
-import { DOMParser } from "https://deno.land/x/deno_dom@v0.1.6-alpha/deno-dom-wasm.ts";
+import { deserializeFeed } from '../deps.ts';
+import { DOMParser } from "../deps.ts";
+
+import { db } from "../doa/db_connection.ts"
+import { RssLinkDoa } from "../doa/rss_links_doa.ts"
+
+const rssLinkDoa = new RssLinkDoa(db)
 
 self.onmessage = async (e: any) => {
     const { link } = e.data;
@@ -24,7 +28,7 @@ const processLink = async (link: string) => {
         if (rssLink) {
             const resp = await fetch(rssLink)
             link = rssLink;
-            await updateLink(link, rssLink)
+            await rssLinkDoa.updateLink(link, rssLink)
             xml = await resp.text()
         } else {
             console.log("Cant retrieve rss")
@@ -33,7 +37,7 @@ const processLink = async (link: string) => {
 
     try {
         await deserializeFeed(xml, { outputJsonFeed: true });
-        saveLink(link)
+        rssLinkDoa.saveLink(link)
     } catch(ex) {
         console.log(ex.message)
     }

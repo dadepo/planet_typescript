@@ -1,5 +1,5 @@
-import { deserializeFeed, FeedType, RSS1, RSS2, Feed } from 'https://deno.land/x/rss@0.3.3/mod.ts';
-import { DOMParser } from "https://deno.land/x/deno_dom@v0.1.6-alpha/deno-dom-wasm.ts";
+import { deserializeFeed, RSS1, RSS2, Feed } from "../deps.ts";
+import { DOMParser } from "../deps.ts";
 
 import { RelevantPostDoa } from "../doa/relevant_post_doa.ts"
 import { RssLinkDoa } from "../doa/rss_links_doa.ts"
