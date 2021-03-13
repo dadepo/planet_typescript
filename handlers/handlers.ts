@@ -39,11 +39,28 @@ await log.setup({
 export const indexHandler = async (ctx: RouterContext) => {
     let offset = ctx.request.url.searchParams.get("offset")  ?? 0
     let limit = ctx.request.url.searchParams.get("limit") ?? 10
-    const links = [...relevantPostDao.getPostsByIndexAndSize(offset as number, limit as number).asObjects()]
-    
-    ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/home.ejs`, {
-        links: links
-    })
+
+    let results = relevantPostDao.getPosts(offset as number, limit as number)
+    switch(results.kind) {
+        case ("success"): {
+
+            const values = results.value?.asObjects()
+            if (values) {
+                const links = [...values]
+                ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/home.ejs`, {
+                    links: links
+                })
+            } else {
+                ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/home.ejs`, {
+                    links: []
+                })
+            }
+            break
+        }
+        case ("fail"): {
+            ctx.response.body = results.message;
+        }
+    }
 }
 
 export const postVoteHandler = async (ctx: RouterContext) => {

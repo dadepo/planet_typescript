@@ -17,17 +17,21 @@
         </script>
     </head>
     <body>
-        <ul>
-            <% for(var i=0; i < links.length; i++) { %>
-                <li>
-                    <%= links[i].title %> Votes: <%= links[i].votes %> | 
-                    <span id="<%= links[i].id %>" onclick="voteUp('<%= links[i].id %>')">up</span> | <span id="<%= links[i].id %>" onclick="voteDown('<%= links[i].id %>')">down</span><br/>
-                    <%= links[i].source %> <br/>
-                    <%= links[i].summary %> <br/>
-                    <hr/>
-                </li>
-            
-             <% } %>
-            </ul>
+        <% if (links.length > 0) { %>
+            <ul>
+                <% for(var i=0; i < links.length; i++) { %>
+                    <li>
+                        <%= links[i].title %> Votes: <%= links[i].votes %> | 
+                        <span id="<%= links[i].id %>" onclick="voteUp('<%= links[i].id %>')">up</span> | <span id="<%= links[i].id %>" onclick="voteDown('<%= links[i].id %>')">down</span><br/>
+                        <%= links[i].source %> <br/>
+                        <%= links[i].summary %> <br/>
+                        <hr/>
+                    </li>
+                
+                 <% } %>
+                </ul>
+          <% } else {%>
+            No posts yet
+        <% } %>
     </body>
 </html>
