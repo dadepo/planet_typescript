@@ -1,6 +1,12 @@
 import { deserializeFeed, FeedType, RSS1, RSS2, Feed } from 'https://deno.land/x/rss@0.3.3/mod.ts';
 import { DOMParser } from "https://deno.land/x/deno_dom@v0.1.6-alpha/deno-dom-wasm.ts";
-import { savePost, notAlreadySaved, getAllLinks } from "../dao.ts";
+
+import { RelevantPostDoa } from "../doa/relevant_post_doa.ts"
+import { RssLinkDoa } from "../doa/rss_links_doa.ts"
+import { db } from "../doa/db_connection.ts"
+
+const relevantPostDoa = new RelevantPostDoa(db)
+const rssLinkDoa = new RssLinkDoa(db)
 
 
 const domParser = new DOMParser()
@@ -83,9 +89,9 @@ const poll_rss_link = async (rssLink: string) => {
         let doc: any = domParser.parseFromString(summary, "text/html")
         let relevant = isRelevant(title, doc.textContent)
         // TODO first extract all the url and check in one go, instead of one by one
-        if (relevant && notAlreadySaved(url)) {
+        if (relevant && relevantPostDoa.notAlreadySaved(url)) {
             console.log("saving", url)
-            savePost(url, title, doc.textContent)
+            relevantPostDoa.savePost(url, title, doc.textContent)
         } else {
             console.log("not saving", url)
         }
@@ -95,7 +101,7 @@ const poll_rss_link = async (rssLink: string) => {
 
 
 const poll = () => {
-    for (const [link] of getAllLinks()) {
+    for (const [link] of rssLinkDoa.getAllLinks()) {
         poll_rss_link(link)
     }
 }

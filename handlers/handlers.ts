@@ -1,8 +1,18 @@
 import {RouterContext}  from "https://deno.land/x/oak@v6.5.0/mod.ts"
 import {renderFileToString} from "https://deno.land/x/dejs@0.9.3/mod.ts"
-import { submitLink, getPostsByIndexAndSize, getVoteInfo, updateVoteInfo } from "../dao.ts"
+
+import { RelevantPostDoa } from "../doa/relevant_post_doa.ts"
+import { VoteDoa } from "../doa/votes_doa.ts"
+import { PendingSubmissionDao } from "../doa/pending_submission_doa.ts"
+
+import { db } from "../doa/db_connection.ts"
+
 import * as log from "https://deno.land/std@0.90.0/log/mod.ts";
 
+
+const pendingDoa = new PendingSubmissionDao(db)
+const relevantPostDoa = new RelevantPostDoa(db)
+const voteDoa = new VoteDoa(db)
 
 // custom configuration with 2 loggers (the default and `tasks` loggers).
 await log.setup({
@@ -30,7 +40,7 @@ export const indexHandler = async (ctx: RouterContext) => {
     let offset = ctx.request.url.searchParams.get("offset")  ?? 0
     let limit = ctx.request.url.searchParams.get("limit") ?? 10
     logger.info("hello world")
-    const links = [...getPostsByIndexAndSize(offset as number, limit as number).asObjects()]
+    const links = [...relevantPostDoa.getPostsByIndexAndSize(offset as number, limit as number).asObjects()]
     
     ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/home.ejs`, {
         links: links
@@ -51,7 +61,7 @@ export const postVoteHandler = async (ctx: RouterContext) => {
 
     // learn more about destructing assignment and refactor
 
-    const result = getVoteInfo(postId, votersIP)
+    const result = voteDoa.getVoteInfo(postId, votersIP)
 
     if (result) {
         currentVote = [...result][0][1]
@@ -61,7 +71,7 @@ export const postVoteHandler = async (ctx: RouterContext) => {
     voteValue = voteValue + currentVote
     if (isVoteValid(voteValue, currentVote)) {
         try {
-            updateVoteInfo(postId, votersIP, voteValue)
+            voteDoa.updateVoteInfo(postId, votersIP, voteValue)
             ctx.response.body = {postId, voteValue, votersIP}
         } catch(exception) {
             console.log(exception)
@@ -83,7 +93,7 @@ export const submitHandlerProcessor = async (ctx: RouterContext) => {
     let data = await ctx.request.body({ type: "form" }).value;
     const submit = data.get("link")
     if (submit) {
-        const isSubmitted = submitLink(submit)
+        const isSubmitted = pendingDoa.submitLink(submit)
         if (isSubmitted) {
             // if link successfully added, start a worker to valdate it
             const checker = new Worker(new URL("../workers/check_rss_link.ts", import.meta.url).href, { 
