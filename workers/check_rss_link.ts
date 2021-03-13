@@ -1,10 +1,10 @@
 import { deserializeFeed } from '../deps.ts';
 import { DOMParser } from "../deps.ts";
 
-import { db } from "../doa/db_connection.ts"
-import { RssLinkDoa } from "../doa/rss_links_doa.ts"
+import { db } from "../dao/db_connection.ts"
+import { RssLinkDao } from "../dao/rss_links_dao.ts"
 
-const rssLinkDoa = new RssLinkDoa(db)
+const rssLinkDao = new RssLinkDao(db)
 
 self.onmessage = async (e: any) => {
     const { link } = e.data;
@@ -28,7 +28,7 @@ const processLink = async (link: string) => {
         if (rssLink) {
             const resp = await fetch(rssLink)
             link = rssLink;
-            await rssLinkDoa.updateLink(link, rssLink)
+            await rssLinkDao.updateLink(link, rssLink)
             xml = await resp.text()
         } else {
             console.log("Cant retrieve rss")
@@ -37,7 +37,7 @@ const processLink = async (link: string) => {
 
     try {
         await deserializeFeed(xml, { outputJsonFeed: true });
-        rssLinkDoa.saveLink(link)
+        rssLinkDao.saveLink(link)
     } catch(ex) {
         console.log(ex.message)
     }

@@ -1,6 +1,6 @@
 import { DB } from "../deps.ts";
 
-export class RssLinkDoa {
+export class RssLinkDao {
   constructor(private db: DB) {
     // contains the links that has been validated to be rss links
     this.db.query(

@@ -1,6 +1,6 @@
 import { DB } from "../deps.ts";
 
-export class VoteDoa {
+export class VoteDao {
   constructor(private db: DB) {
     // TODO what does on conflict replace mean
     this.db.query(

@@ -6,4 +6,4 @@ export { DOMParser } from "https://deno.land/x/deno_dom@v0.1.6-alpha/deno-dom-wa
 export {Application, Router}  from "https://deno.land/x/oak@v6.5.0/mod.ts"
 export { deserializeFeed, FeedType} from 'https://deno.land/x/rss@0.3.3/mod.ts';
 export type { RSS1, RSS2, Feed } from 'https://deno.land/x/rss@0.3.3/mod.ts';
-
+export { assertEquals } from 'https://deno.land/std@0.90.0/testing/asserts.ts'

@@ -1,19 +1,20 @@
 import {RouterContext}  from "../deps.ts";
 import {renderFileToString} from "../deps.ts"
 import { log } from "../deps.ts"
+import { Result } from "../lib.ts"
 
 
-import { RelevantPostDoa } from "../doa/relevant_post_doa.ts"
-import { VoteDoa } from "../doa/votes_doa.ts"
-import { PendingSubmissionDao } from "../doa/pending_submission_doa.ts"
+import { RelevantPostDao } from "../dao/relevant_post_dao.ts"
+import { VoteDao } from "../dao/votes_dao.ts"
+import { PendingSubmissionDao } from "../dao/pending_submission_dao.ts"
 
-import { db } from "../doa/db_connection.ts"
+import { db } from "../dao/db_connection.ts"
 
 
 
-const pendingDoa = new PendingSubmissionDao(db)
-const relevantPostDoa = new RelevantPostDoa(db)
-const voteDoa = new VoteDoa(db)
+const pendingDao = new PendingSubmissionDao(db)
+const relevantPostDao = new RelevantPostDao(db)
+const voteDao = new VoteDao(db)
 
 // custom configuration with 2 loggers (the default and `tasks` loggers).
 await log.setup({
@@ -38,7 +39,7 @@ await log.setup({
 export const indexHandler = async (ctx: RouterContext) => {
     let offset = ctx.request.url.searchParams.get("offset")  ?? 0
     let limit = ctx.request.url.searchParams.get("limit") ?? 10
-    const links = [...relevantPostDoa.getPostsByIndexAndSize(offset as number, limit as number).asObjects()]
+    const links = [...relevantPostDao.getPostsByIndexAndSize(offset as number, limit as number).asObjects()]
     
     ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/home.ejs`, {
         links: links
@@ -59,7 +60,7 @@ export const postVoteHandler = async (ctx: RouterContext) => {
 
     // learn more about destructing assignment and refactor
 
-    const result = voteDoa.getVoteInfo(postId, votersIP)
+    const result = voteDao.getVoteInfo(postId, votersIP)
 
     if (result) {
         currentVote = [...result][0][1]
@@ -69,7 +70,7 @@ export const postVoteHandler = async (ctx: RouterContext) => {
     voteValue = voteValue + currentVote
     if (isVoteValid(voteValue, currentVote)) {
         try {
-            voteDoa.updateVoteInfo(postId, votersIP, voteValue)
+            voteDao.updateVoteInfo(postId, votersIP, voteValue)
             ctx.response.body = {postId, voteValue, votersIP}
         } catch(exception) {
             console.log(exception)
@@ -88,27 +89,40 @@ export const submitHandler = async (ctx: RouterContext) => {
 }
 
 export const submitHandlerProcessor = async (ctx: RouterContext) => {
-    let data = await ctx.request.body({ type: "form" }).value;
+    let data: {get: Function} = await ctx.request.body({ type: "form" }).value;
+    
     const submit = data.get("link")
-    if (submit) {
-        const isSubmitted = pendingDoa.submitLink(submit)
-        if (isSubmitted) {
-            // if link successfully added, start a worker to valdate it
-            const checker = new Worker(new URL("../workers/check_rss_link.ts", import.meta.url).href, { 
-                type: "module",
-                deno: {
-                    namespace: true,
-                }
-            });
 
-            checker.postMessage({link: submit})
+    if (submit) {
+
+        const result: Result<boolean> = pendingDao.submitLink(submit)
+        switch(result.kind) {
+            case ("success"): {
+
+                const isSubmitted = result.value
+                if (isSubmitted) {
+                    const checker = new Worker(new URL("../workers/check_rss_link.ts", import.meta.url).href, { 
+                        type: "module",
+                        deno: {
+                            namespace: true,
+                        }
+                    });
+        
+                    checker.postMessage({link: submit})
+                }
+                ctx.response.body = "submitted"
+                break
+            }
+            case ("fail"):
+                ctx.response.status = 501
+                ctx.response.body = "Something went wrong"
+                break;
         }
-        // TODO return real error response
-        ctx.response.body = "submitted"
+
     } else {
+        ctx.response.status = 403
         ctx.response.body = "Something went wrong"
     }
-
 }
 
 

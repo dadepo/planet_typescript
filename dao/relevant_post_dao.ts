@@ -1,6 +1,6 @@
 import { DB } from "../deps.ts";
 
-export class RelevantPostDoa {
+export class RelevantPostDao {
   constructor(private db: DB) {
     // contains polled rss validated feeds
     this.db.query(

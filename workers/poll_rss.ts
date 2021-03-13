@@ -1,12 +1,12 @@
 import { deserializeFeed, RSS1, RSS2, Feed } from "../deps.ts";
 import { DOMParser } from "../deps.ts";
 
-import { RelevantPostDoa } from "../doa/relevant_post_doa.ts"
-import { RssLinkDoa } from "../doa/rss_links_doa.ts"
-import { db } from "../doa/db_connection.ts"
+import { RelevantPostDao } from "../dao/relevant_post_dao.ts"
+import { RssLinkDao } from "../dao/rss_links_dao.ts"
+import { db } from "../dao/db_connection.ts"
 
-const relevantPostDoa = new RelevantPostDoa(db)
-const rssLinkDoa = new RssLinkDoa(db)
+const relevantPostDao = new RelevantPostDao(db)
+const rssLinkDao = new RssLinkDao(db)
 
 
 const domParser = new DOMParser()
@@ -89,9 +89,9 @@ const poll_rss_link = async (rssLink: string) => {
         let doc: any = domParser.parseFromString(summary, "text/html")
         let relevant = isRelevant(title, doc.textContent)
         // TODO first extract all the url and check in one go, instead of one by one
-        if (relevant && relevantPostDoa.notAlreadySaved(url)) {
+        if (relevant && relevantPostDao.notAlreadySaved(url)) {
             console.log("saving", url)
-            relevantPostDoa.savePost(url, title, doc.textContent)
+            relevantPostDao.savePost(url, title, doc.textContent)
         } else {
             console.log("not saving", url)
         }
@@ -101,7 +101,7 @@ const poll_rss_link = async (rssLink: string) => {
 
 
 const poll = () => {
-    for (const [link] of rssLinkDoa.getAllLinks()) {
+    for (const [link] of rssLinkDao.getAllLinks()) {
         poll_rss_link(link)
     }
 }
