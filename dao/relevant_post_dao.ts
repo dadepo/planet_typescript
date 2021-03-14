@@ -2,8 +2,6 @@ import { DB } from "../deps.ts";
 import { Result } from "../lib.ts"
 
 
-type Post = {id: number, source: string, title: string,  summary: string, timestamp: number}
-
 export class RelevantPostDao {
   constructor(private db: DB) {
     this.db.query(
