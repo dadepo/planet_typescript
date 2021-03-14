@@ -35,9 +35,12 @@ export class RssLinkDao {
 
   public getAllLinks() {
     try {
-      return this.db.query("SELECT link from rss_links");
+      return {
+        kind:"success",
+        value:this.db.query("SELECT link from rss_links")
+      };
     } catch (e) {
-      return [];
+      return { kind:"fail", message: (e as Error).message };
     }
   }
 }

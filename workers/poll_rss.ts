@@ -115,8 +115,17 @@ const poll_rss_link = async (rssLink: string) => {
 
 
 const poll = () => {
-    for (const [link] of rssLinkDao.getAllLinks()) {
-        poll_rss_link(link)
+    let result = rssLinkDao.getAllLinks()
+    switch(result.kind) {
+        case ("fail"): {
+            break
+        }
+        case ("success"): {
+            for (const [link] of result.value) {
+                poll_rss_link(link)
+            }
+            break
+        }
     }
 }
 
