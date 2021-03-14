@@ -121,7 +121,7 @@ const poll = () => {
             break
         }
         case ("success"): {
-            for (const [link] of result.value) {
+            for (const [link] of result.value!) {
                 poll_rss_link(link)
             }
             break

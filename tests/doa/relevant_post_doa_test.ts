@@ -44,8 +44,7 @@ Deno.test("Successful retrieval of posts by links no offset", () => {
 
     switch(result.kind) {
         case("fail"): {
-            console.log(1111, result.message)
-            throw new Error("this test fails");
+            throw new Error(result.message);
         }
         case ("success"): {
             let [first, second] = sut.getPosts(0,2).value!.asObjects()

@@ -9,16 +9,30 @@ export class VoteDao {
   }
 
   public getVoteInfo(postId: number, votersIP: string) {
-    return this.db.query(
-      "SELECT * from votes where post_id = (?) and voters_ip = (?)",
-      [postId, votersIP],
-    );
+    try {
+
+      return {
+        kind: "success", 
+        value: this.db.query(
+        "SELECT * from votes where post_id = (?) and voters_ip = (?)",
+        [postId, votersIP],
+      )};
+    } catch(e) {
+      return {kind:"fail", message: (e as Error).message}
+    }
   }
 
   public updateVoteInfo(postId: number, votersIP: string, vote: number) {
-    return this.db.query(
-      "REPLACE INTO votes (post_id, votes, voters_ip) VALUES (?, ?, ?)",
-      [postId, vote, votersIP],
-    );
+    try {
+      return {
+        kind:"success",
+        value: this.db.query(
+          "REPLACE INTO votes (post_id, votes, voters_ip) VALUES (?, ?, ?)",
+          [postId, vote, votersIP],
+        )
+      }
+    } catch(e) {
+      return {kind:"fail", message: (e as Error).message}
+    }
   }
 }

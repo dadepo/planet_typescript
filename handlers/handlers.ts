@@ -79,8 +79,11 @@ export const postVoteHandler = async (ctx: RouterContext) => {
 
     const result = voteDao.getVoteInfo(postId, votersIP)
 
+
+
+
     if (result) {
-        currentVote = [...result][0][1]
+        currentVote = [...result.value!][0][1]
     }
     console.log(currentVote, voteValue)
     // take care the case where post does not even exit
