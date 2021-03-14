@@ -14,7 +14,6 @@ self.onmessage = async (e: any) => {
   };
 
 const processLink = async (link: string) => {
-    console.log("1111", link)
     const resp = await fetch(link)
     let xml = await resp.text()
 

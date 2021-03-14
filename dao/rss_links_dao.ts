@@ -1,4 +1,5 @@
 import { DB } from "../deps.ts";
+import { Result } from "../lib.ts"
 
 export class RssLinkDao {
   constructor(private db: DB) {
@@ -8,25 +9,28 @@ export class RssLinkDao {
     );
   }
 
-  public saveLink(rssLink: string) {
+  public saveLink(rssLink: string): Result<boolean>  {
     try {
       this.db.query("INSERT INTO rss_links (link, timestamp) VALUES (?, ?)", [
         rssLink,
         Date.now(),
       ]);
-      console.log("added to rss_link", rssLink);
-      return true;
+      return {kind:"success", value: true};
     } catch (e) {
-      console.log(e);
-      return false;
+      return { kind:"fail", message: (e as Error).message };
     }
   }
 
-  public updateLink(oldLink: string, newLink: string) {
-    return this.db.query("UPDATE rss_links SET link = (?) where link = (?)", [
-      newLink,
-      oldLink,
-    ]);
+  public updateLink(oldLink: string, newLink: string): Result<boolean> {
+    try {
+      this.db.query("UPDATE rss_links SET link = (?) where link = (?)", [
+        newLink,
+        oldLink,
+      ]);
+      return {kind:"success", value: true}
+    } catch(e) {
+      return { kind:"fail", message: (e as Error).message };
+    }
   }
 
   public getAllLinks() {

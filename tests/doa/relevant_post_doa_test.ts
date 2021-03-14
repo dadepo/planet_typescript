@@ -1,7 +1,7 @@
 import { RelevantPostDao } from "../../dao/relevant_post_dao.ts";
 import { VoteDao } from "../../dao/votes_dao.ts";
 import { assertEquals, DB } from "../../deps.ts";
-import { Fail } from "../../lib.ts"
+
 
 
 Deno.test("Successful submission if not submitted before", () => {
