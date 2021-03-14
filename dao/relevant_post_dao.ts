@@ -38,20 +38,16 @@ export class RelevantPostDao {
   }
 
 
-  public notAlreadySaved(source: string) {
+  public countBySource(source: string): Result<number> {
+    //note should only be 0 or 1
     try {
       const [count] = this.db.query(
         "SELECT count(*) from relevant_post where source = (?)",
         [source],
       );
-      if (count[0] === 0) {
-        return true;
-      } else {
-        return false;
-      }
+      return { kind:"success", value: count[0] }
     } catch (e) {
-      console.log(e);
-      throw e;
+      return {kind: "fail", message: (e as Error).message}
     }
   }
 }

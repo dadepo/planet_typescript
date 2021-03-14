@@ -4,6 +4,7 @@ import { DOMParser } from "../deps.ts";
 import { RelevantPostDao } from "../dao/relevant_post_dao.ts"
 import { RssLinkDao } from "../dao/rss_links_dao.ts"
 import { db } from "../dao/db_connection.ts"
+import { Result } from "../lib.ts";
 
 const relevantPostDao = new RelevantPostDao(db)
 const rssLinkDao = new RssLinkDao(db)
@@ -25,6 +26,7 @@ const isRelevant = (title: string, summary: string): boolean => {
 
     return isRelevantTitle || isRelevantSummary;
 }
+
 
 async function wait(ms: number) {
     return new Promise(resolve => {
@@ -89,11 +91,23 @@ const poll_rss_link = async (rssLink: string) => {
         let doc: any = domParser.parseFromString(summary, "text/html")
         let relevant = isRelevant(title, doc.textContent)
         // TODO first extract all the url and check in one go, instead of one by one
-        if (relevant && relevantPostDao.notAlreadySaved(url)) {
-            console.log("saving", url)
-            relevantPostDao.savePost(url, title, doc.textContent)
-        } else {
-            console.log("not saving", url)
+
+        let result: Result<number> = relevantPostDao.countBySource(url)
+
+        switch(result.kind) {
+            case ("success"): {
+                if (relevant && result.value === 0) {
+                    console.log("saving", url)
+                    relevantPostDao.savePost(url, title, doc.textContent)
+                } else {
+                    console.log("not saving", url)
+                }
+                break;
+            }
+            case ("fail"): {
+                console.log("Error", result.message)
+                break;
+            }
         }
         await wait(2000);
     }

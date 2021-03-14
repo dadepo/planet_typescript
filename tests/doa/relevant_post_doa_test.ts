@@ -98,3 +98,47 @@ Deno.test("Successful retrieval of posts by links using offset and size", () => 
         }
     }
 })
+
+Deno.test("Successfully count by source found 1", () => {
+    const db = new DB(":memory:");
+
+    new VoteDao(db)
+    const sut = new RelevantPostDao(db)
+
+    sut.savePost("http://www.example1.com", "title1", "summary1")
+    
+    let result = sut.countBySource("http://www.example1.com")
+    
+    switch(result.kind) {
+        case("success"): {
+            assertEquals(result.value, 1);
+            break
+        }
+        case("fail"): {
+            throw new Error(result.message);
+            break;
+        }
+
+    }
+})
+
+Deno.test("Successfully count by source found 0", () => {
+    const db = new DB(":memory:");
+
+    new VoteDao(db)
+    const sut = new RelevantPostDao(db)
+    
+    let result = sut.countBySource("http://www.example1.com")
+    
+    switch(result.kind) {
+        case("success"): {
+            assertEquals(result.value, 0);
+            break
+        }
+        case("fail"): {
+            throw new Error(result.message);
+            break;
+        }
+
+    }
+})
