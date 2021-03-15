@@ -1,6 +1,6 @@
 import { Application, Router, RouterContext }  from "./deps.ts"
-import { indexHandler, submitHandler, submitHandlerProcessor, postVoteHandler } from "./handlers/handlers.ts";
-
+import { pendingGetHandler, indexHandler, submitHandler, submitHandlerProcessor, postVoteHandler } from "./handlers/handlers.ts";
+import { isIPAllowed } from "./middleware/ip_check.ts"
 
 const app = new Application()
 const router = new Router();
@@ -11,6 +11,8 @@ router.get("/", indexHandler)
 router.get("/index", indexHandler)
 
 router.get("/submit", submitHandler)
+
+router.get("/admin/pending/:page", isIPAllowed, pendingGetHandler)
 
 router.post("/vote", postVoteHandler)
 router.post("/submit", submitHandlerProcessor)

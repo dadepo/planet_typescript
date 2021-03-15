@@ -145,6 +145,12 @@ export const submitHandlerProcessor = async (ctx: RouterContext) => {
 }
 
 
+export const pendingGetHandler = async (ctx: RouterContext) => {
+    ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/pending_submissions.ejs`, {
+        links:[]
+    })
+}
+
 const isVoteValid = (voteValue: number, currentVote: number): boolean => {
     if (currentVote === 0) {
         return true
