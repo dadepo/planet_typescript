@@ -1,19 +1,30 @@
 <html>
     <head>
         <script type="text/javascript">
-        const voteUp = (id) => {
-            fetch("http://localhost:4300/vote", 
+        const voteUp = async (id) => {
+            let res = await fetch("http://localhost:4300/vote", 
             { method: 'POST', 
             headers: {'Content-Type': 'application/json'}, 
             body: JSON.stringify({id, value: 1})})
+
+            if (res.status === 200) {
+                let payload = (await res.json())
+                document.getElementById(`vote-${id}`).innerHTML = payload.voteValue;
+            }
         }
 
-        const voteDown = (id) => {
-            fetch("http://localhost:4300/vote", 
+        const voteDown = async (id) => {
+            let res = await fetch("http://localhost:4300/vote", 
             { method: 'POST', 
             headers: {'Content-Type': 'application/json'}, 
             body: JSON.stringify({id, value: -1})})
+
+            if (res.status === 200) {
+                let payload = (await res.json())
+                document.getElementById(`vote-${id}`).innerHTML = payload.voteValue;
+            }
         }
+        
         </script>
     </head>
     <body>
@@ -21,7 +32,7 @@
             <ul>
                 <% for(var i=0; i < links.length; i++) { %>
                     <li>
-                        <%= links[i].title %> Votes: <%= links[i].votes %> | 
+                        <%= links[i].title %> Votes: <span id="vote-<%= links[i].id %>"><%= links[i].votes %> </span> | 
                         <span id="<%= links[i].id %>" onclick="voteUp('<%= links[i].id %>')">up</span> | <span id="<%= links[i].id %>" onclick="voteDown('<%= links[i].id %>')">down</span><br/>
                         <%= links[i].source %> <br/>
                         <%= links[i].summary %> <br/>
