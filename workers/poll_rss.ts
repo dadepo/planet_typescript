@@ -11,7 +11,7 @@ const rssLinkDao = new RssLinkDao(db)
 
 
 const domParser = new DOMParser()
-const relevantKeywords = ["deno", "typescript", "javascript", "oak"]
+const relevantKeywords = ["deno", "typescript", "javascript", "oak", "ecmascript"]
 
 console.log("I am a worker!")
 
@@ -109,7 +109,7 @@ const poll_rss_link = async (rssLink: string) => {
                 break;
             }
         }
-        await wait(2000);
+        await wait(5000);
     }
 }
 
@@ -132,5 +132,5 @@ const poll = () => {
 poll()
 setInterval(() => {
     poll()
-}, 120000);
+}, 900000);
 

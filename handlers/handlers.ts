@@ -76,31 +76,30 @@ export const postVoteHandler = async (ctx: RouterContext) => {
 
 
     // learn more about destructing assignment and refactor
-
+// CREATE TABLE IF NOT EXISTS votes (post_id INTEGER, votes INTEGER, voters_ip TEXT, UNIQUE(post_id, voters_ip) ON CONFLICT REPLACE
     const result = voteDao.getVoteInfo(postId, votersIP)
 
+    switch(result.kind) {
+        case("success"): {
+            const dbresult = [...result.value!]
+            currentVote = dbresult.length === 0 ? 0 : dbresult[0][1]
+            voteValue = voteValue + currentVote
+            if (isVoteValid(voteValue, currentVote)) {
+                await voteDao.updateVoteInfo(postId, votersIP, voteValue)
+                ctx.response.body = {postId, voteValue, votersIP}
+                return
+            } else {
+                ctx.response.status = 400
+            }
 
-
-
-    if (result) {
-        currentVote = [...result.value!][0][1]
-    }
-    console.log(currentVote, voteValue)
-    // take care the case where post does not even exit
-    voteValue = voteValue + currentVote
-    if (isVoteValid(voteValue, currentVote)) {
-        try {
-            voteDao.updateVoteInfo(postId, votersIP, voteValue)
-            ctx.response.body = {postId, voteValue, votersIP}
-        } catch(exception) {
-            console.log(exception)
-            ctx.response.status = 501
-            // TODO return error message
+            break
         }
-        return
-    } else {
-        ctx.response.status = 400
+        case("fail"): {
+            ctx.response.status = 501
+            ctx.response.body = result.message
+        }
     }
+
 }
 
 

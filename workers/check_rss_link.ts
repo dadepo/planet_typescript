@@ -22,8 +22,11 @@ const processLink = async (link: string) => {
         // parse the xml link
         // TODO fix all the type assertiong and probably don't recurse
         const doc = new DOMParser().parseFromString(xml, "text/html")!;
-        const rssLink = doc.querySelector("link[type='application/rss+xml']")?.getAttribute("href") as string
+        
+        let rssLink = doc.querySelector("link[type='application/rss+xml']")?.getAttribute("href") as string
+        rssLink = rssLink ?? doc.querySelector("link[type='application/atom+xml']")?.getAttribute("href") as string
         console.log("got new link", rssLink)
+        
         if (rssLink) {
             const resp = await fetch(rssLink)
             link = rssLink;
