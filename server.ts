@@ -5,7 +5,6 @@ import { isIPAllowed } from "./middleware/ip_check.ts"
 const app = new Application()
 const router = new Router();
 
-
 router.get("/", indexHandler)
 
 router.get("/index", indexHandler)

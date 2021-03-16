@@ -3,8 +3,7 @@ import {config}  from "../deps.ts";
 
 export const isIPAllowed = async (ctx: RouterContext, next: Function) => {
     const allowedIPS = config()["ADMIN_IP"];
-    const userIP = ctx.request.headers.get('host')!;
-
+    const userIP = ctx.request.ip;
     if (allowedIPS.split(",").includes(userIP.split(":")[0])) {
         await next();
     } else {

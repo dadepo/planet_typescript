@@ -146,9 +146,36 @@ export const submitHandlerProcessor = async (ctx: RouterContext) => {
 
 
 export const pendingGetHandler = async (ctx: RouterContext) => {
-    ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/pending_submissions.ejs`, {
-        links:[]
-    })
+    let offset = 0;
+    const count = 10;
+
+    if (ctx.params.page !== "1") {
+        offset = (parseInt(ctx.params.page!) - 1) * count
+    } 
+
+    let results = relevantPostDao.getPosts(offset, count)
+
+    switch(results.kind) {
+        case ("success"): {
+
+            const values = results.value?.asObjects()
+            if (values) {
+                const links = [...values]
+                
+                ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/pending_submissions.ejs`, {
+                    links:links
+                })
+            } else {
+                ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/home.ejs`, {
+                    links: []
+                })
+            }
+            break
+        }
+        case ("fail"): {
+            ctx.response.body = results.message;
+        }
+    }
 }
 
 const isVoteValid = (voteValue: number, currentVote: number): boolean => {
