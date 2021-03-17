@@ -1,5 +1,10 @@
 - rename tables
 - input sanitation
 - admin site
+ - flag submissions
+ - filter submissions
+- pagination
+- better design
+- ci/ic 
 - extract needed const to env
 - when to use const or let 

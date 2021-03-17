@@ -1,6 +1,7 @@
 import { RelevantPostDao } from "../../dao/relevant_post_dao.ts";
 import { VoteDao } from "../../dao/votes_dao.ts";
 import { assertEquals, DB } from "../../deps.ts";
+import { Success } from "../../lib.ts";
 
 
 
@@ -40,14 +41,14 @@ Deno.test("Successful retrieval of posts by links no offset", () => {
     sut.savePost("http://www.example1.com", "title1", "summary1")
     sut.savePost("http://www.example2.com", "title2", "summary2")
     
-    let result = sut.getPosts(1,2)
+    let result = sut.getAllVisiblePosts(1,2)
 
     switch(result.kind) {
         case("fail"): {
             throw new Error(result.message);
         }
         case ("success"): {
-            let [first, second] = sut.getPosts(0,2).value!.asObjects()
+            let [first, second] = sut.getAllVisiblePosts(0,2).value!.asObjects()
             
             assertEquals(first.id, 1);
             assertEquals(first.source, "http://www.example1.com");
@@ -75,14 +76,14 @@ Deno.test("Successful retrieval of posts by links using offset and size", () => 
     sut.savePost("http://www.example3.com", "title3", "summary3")
     sut.savePost("http://www.example4.com", "title4", "summary4")
     
-    let result = sut.getPosts(1,2)
+    let result = sut.getAllVisiblePosts(1,2)
 
     switch(result.kind) {
         case("fail"): {
             throw new Error(result.message);
         }
         case ("success"): {
-            let [second, third] = sut.getPosts(1,2).value!.asObjects()
+            let [second, third] = sut.getAllVisiblePosts(1,2).value!.asObjects()
             
             assertEquals(second.id, 2);
             assertEquals(second.source, "http://www.example2.com");
@@ -136,8 +137,34 @@ Deno.test("Successfully count by source found 0", () => {
         }
         case("fail"): {
             throw new Error(result.message);
-            break;
         }
 
     }
 })
+
+Deno.test({
+    name: "Successful hide post", 
+    only: false,
+    fn(){
+    const db = new DB(":memory:");
+    new VoteDao(db)
+    const sut = new RelevantPostDao(db)
+    sut.savePost("http://www.example1.com", "title1", "summary1")
+    let result = sut.getAllVisiblePosts(0,10)
+
+    switch(result.kind) {
+        case("success"): {
+            const [[,link]] = [...result.value!]
+            assertEquals(link, "http://www.example1.com")
+            sut.hidePost(1) // id will be 1
+            const result2 = sut.getAllVisiblePosts(0,10)
+            const link2 = [...result2.value!]
+            assertEquals(link2, [])
+            break
+        }
+        case("fail"): {
+            throw new Error(result.message);
+        }
+    }
+
+}})

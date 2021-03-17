@@ -40,7 +40,7 @@ export const indexHandler = async (ctx: RouterContext) => {
     let offset = ctx.request.url.searchParams.get("offset")  ?? 0
     let limit = ctx.request.url.searchParams.get("limit") ?? 10
 
-    let results = relevantPostDao.getPosts(offset as number, limit as number)
+    let results = relevantPostDao.getAllVisiblePosts(offset as number, limit as number)
     switch(results.kind) {
         case ("success"): {
 
@@ -157,7 +157,7 @@ export const pendingGetHandler = async (ctx: RouterContext) => {
         offset = (parseInt(ctx.params.page!) - 1) * count
     } 
 
-    let results = relevantPostDao.getPosts(offset, count)
+    let results = relevantPostDao.getAllVisiblePosts(offset, count)
 
     switch(results.kind) {
         case ("success"): {
