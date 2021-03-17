@@ -47,7 +47,6 @@ export const indexHandler = async (ctx: RouterContext) => {
             const values = results.value?.asObjects()
             if (values) {
                 const links = [...values]
-                console.log(links)
                 ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/home.ejs`, {
                     links: links.map(link => {
                         return Object.assign(link, {
