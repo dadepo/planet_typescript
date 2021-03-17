@@ -11,7 +11,7 @@ const rssLinkDao = new RssLinkDao(db)
 
 
 const domParser = new DOMParser()
-const relevantKeywords = ["deno", "typescript", "javascript", "oak", "ecmascript"]
+const relevantKeywords = ["deno", "typescript", "javascript", "oak", "ecmascript", "console", "forEach"]
 
 console.log("I am a worker!")
 
@@ -21,7 +21,9 @@ const isRelevant = (title: string, summary: string): boolean => {
     })
 
     let isRelevantSummary = summary.split(" ").some(word => {
-        return relevantKeywords.includes(word.toLowerCase())
+        return relevantKeywords.some(key => {
+            return key.match(new RegExp(word.toLowerCase(), 'gi')) !== null 
+        })
     })
 
     return isRelevantTitle || isRelevantSummary;
@@ -59,7 +61,7 @@ const poll_rss_link = async (rssLink: string) => {
         feed.entries.forEach(element => {
             items.push({
                 title: element.title.value ?? "",
-                summary: element.content?.value?.split(" ").splice(0, 30).join(" ") ?? "",
+                summary: element.summary?.value ?? "",
                 url: element.id ?? ""
             })
         });
@@ -67,7 +69,7 @@ const poll_rss_link = async (rssLink: string) => {
         feed.channel.items.forEach(element => {
             items.push({
                 title: element.title ?? "",
-                summary: element.description?.split(" ").splice(0, 30).join(" ") ?? "",
+                summary: element.description ?? "",
                 url: element.link ?? ""
             })
         })
@@ -75,7 +77,7 @@ const poll_rss_link = async (rssLink: string) => {
         feed.channel.items.forEach(element => {
             items.push({
                 title: element.title ?? "",
-                summary: element.description?.split(" ").splice(0, 30).join(" ") ?? "",
+                summary: element.description ?? "",
                 url: element.link ?? ""
             })
         })
@@ -96,11 +98,15 @@ const poll_rss_link = async (rssLink: string) => {
 
         switch(result.kind) {
             case ("success"): {
-                if (relevant && result.value === 0) {
-                    console.log("saving", url)
-                    relevantPostDao.savePost(url, title, doc.textContent)
+                if (relevant) {
+                    if (result.value === 0) {
+                        console.log("saving", url)
+                        relevantPostDao.savePost(url, title, doc.textContent)
+                    } else {
+                        console.log("already saved", url)
+                    }
                 } else {
-                    console.log("not saving", url)
+                    console.log("not relevant", url)
                 }
                 break;
             }

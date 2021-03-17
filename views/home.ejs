@@ -32,7 +32,7 @@
             <ul>
                 <% for(var i=0; i < links.length; i++) { %>
                     <li>
-                        <%= links[i].title %> Votes: <span id="vote-<%= links[i].id %>"><%= links[i].votes %> </span> | 
+                        <%- links[i].title %> Votes: <span id="vote-<%= links[i].id %>"><%= links[i].votes %> </span> | 
                         <span id="<%= links[i].id %>" onclick="voteUp('<%= links[i].id %>')">up</span> | <span id="<%= links[i].id %>" onclick="voteDown('<%= links[i].id %>')">down</span><br/>
                         <%= links[i].source %> <br/>
                         <%= links[i].summary %> <br/>
