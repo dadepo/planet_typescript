@@ -5,6 +5,7 @@ import { RelevantPostDao } from "../dao/relevant_post_dao.ts"
 import { RssLinkDao } from "../dao/rss_links_dao.ts"
 import { db } from "../dao/db_connection.ts"
 import { Result } from "../lib.ts";
+import {config}  from "../deps.ts";
 
 const relevantPostDao = new RelevantPostDao(db)
 const rssLinkDao = new RssLinkDao(db)
@@ -62,7 +63,7 @@ const poll_rss_link = async (rssLink: string) => {
             items.push({
                 title: element.title.value ?? "",
                 summary: element.summary?.value ?? "",
-                url: element.id ?? ""
+                url: (element as any).href ?? ""
             })
         });
     } else if (isRss1(feed)) {
@@ -135,8 +136,11 @@ const poll = () => {
     }
 }
 
+
+if (config()["PAUSE"] !== "true") {
 poll()
 setInterval(() => {
     poll()
 }, 900000);
+}
 

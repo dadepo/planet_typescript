@@ -25,7 +25,9 @@ const processLink = async (link: string) => {
         
         let rssLink = doc.querySelector("link[type='application/rss+xml']")?.getAttribute("href") as string
         rssLink = rssLink ?? doc.querySelector("link[type='application/atom+xml']")?.getAttribute("href") as string
-        console.log("got new link", rssLink)
+        if (!rssLink.includes("http")) {
+            rssLink = `${link}/${rssLink}`
+        }
         
         if (rssLink) {
             const resp = await fetch(rssLink)

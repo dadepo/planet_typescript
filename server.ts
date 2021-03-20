@@ -1,17 +1,18 @@
 import { Application, Router, RouterContext }  from "./deps.ts"
-import { pendingGetHandler, indexHandler, submitHandler, submitHandlerProcessor, postVoteHandler } from "./handlers/handlers.ts";
+import { indexHandler, submitHandler, submitHandlerProcessor, postVoteHandler } from "./handlers/handlers.ts";
+import { hidePostHandler, pendingGetHandler } from "./handlers/admin.ts";
+
 import { isIPAllowed } from "./middleware/ip_check.ts"
 
 const app = new Application()
 const router = new Router();
 
 router.get("/", indexHandler)
-
 router.get("/index", indexHandler)
-
 router.get("/submit", submitHandler)
-
 router.get("/admin/pending/:page", isIPAllowed, pendingGetHandler)
+
+router.post("/admin/pending/visibility", isIPAllowed, hidePostHandler)
 
 router.post("/vote", postVoteHandler)
 router.post("/submit", submitHandlerProcessor)
@@ -23,10 +24,8 @@ router.get("/(.*)", async (context: RouterContext) => {
     context.response.body = "404 | Page not Found";
 });
 
-
 app.use(router.routes())
 app.use(router.allowedMethods())
-
 app.addEventListener("error", evt => {
     console.log(evt.error);
 })

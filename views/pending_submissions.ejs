@@ -1,6 +1,23 @@
 <html>
     <head>
         <script type="text/javascript">
+
+        const hide = (id) => {
+            fetch(`http://localhost:4300/admin/pending/visibility`, {
+                method: "POST",
+                headers: {'Content-Type': 'application/json'}, 
+                body: JSON.stringify({id, action:'hide'})
+            })
+        }
+            
+
+        const show = (id) => {
+            fetch(`http://localhost:4300/admin/pending/visibility`, {
+                method: "POST",
+                headers: {'Content-Type': 'application/json'}, 
+                body: JSON.stringify({id, action:'show'})
+            })
+        }
         </script>
     </head>
     <body>
@@ -16,9 +33,16 @@
                 <% links.forEach(function(link){ %>
                     <tr>
                         <td><%= link.id %></td>
-                        <td>link.source</td>
-                        <td>visible</td>
-                        <td>Hide</td>
+                        <td><%= link.source%></td>
+                        <% if (link.hidden === 0) { %>
+                            <td><%= "visible" %></td>
+                        <% } else { %>
+                            <td><%= "hidden" %></td>
+                        <% }  %>
+                        <td>
+                            <button onclick="hide(<%= link.id %>)" id="hide-<%= link.id %>" type="button">Hide</button> | 
+                            <button onclick="show(<%= link.id %>)" id="show-<%= link.id %>" type="button">Show</button>
+                        </td>
                     </tr>
                 <% }); %>
 

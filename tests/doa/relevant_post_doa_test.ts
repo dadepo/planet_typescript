@@ -166,5 +166,23 @@ Deno.test({
             throw new Error(result.message);
         }
     }
+}})
 
+
+Deno.test({
+    name: "Successful show hidden post", 
+    only: false,
+    fn(){
+    const db = new DB(":memory:");
+    new VoteDao(db)
+    const sut = new RelevantPostDao(db)
+    sut.savePost("http://www.example1.com", "title1", "summary1")
+    sut.hidePost(1)
+    let result = sut.getAllVisiblePosts(0,10)
+    const link = [...result.value!]
+    assertEquals(link, [])
+    sut.showPost(1)
+    const result2 = sut.getAllVisiblePosts(0,10)
+    const [[,link2]] = [...result2.value!]
+    assertEquals(link2, "http://www.example1.com")
 }})

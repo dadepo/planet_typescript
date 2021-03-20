@@ -58,6 +58,14 @@ export class RelevantPostDao {
     }
   }
 
+  public showPost(id:number) {
+    try {
+      this.db.query("UPDATE relevant_post SET hidden = false where id = ?", [id])
+    } catch(e: unknown) {
+      return {kind: "fail", message: (e as Error).message}
+    }
+  }
+
   public countBySource(source: string): Result<number> {
     //note should only be 0 or 1
     try {
