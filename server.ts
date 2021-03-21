@@ -1,5 +1,6 @@
 import { Application, Router, RouterContext, send }  from "./deps.ts"
-import { indexHandler, submitHandler, submitHandlerProcessor, postVoteHandler } from "./handlers/handlers.ts";
+import { submitHandler, submitHandlerProcessor} from "./handlers/handlers.ts";
+import { indexHandler, postVoteHandler } from "./handlers/home.ts";
 import { hidePostHandler, pendingGetHandler } from "./handlers/admin.ts";
 
 import { isIPAllowed } from "./middleware/ip_check.ts"
