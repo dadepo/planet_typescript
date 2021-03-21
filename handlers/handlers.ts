@@ -38,7 +38,7 @@ await log.setup({
 
 export const indexHandler = async (ctx: RouterContext) => {
     let offset = ctx.request.url.searchParams.get("offset")  ?? 0
-    let limit = ctx.request.url.searchParams.get("limit") ?? 10
+    let limit = ctx.request.url.searchParams.get("limit") ?? 30
 
     let results = relevantPostDao.getAllVisiblePosts(offset as number, limit as number)
     switch(results.kind) {

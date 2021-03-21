@@ -12,9 +12,13 @@ const rssLinkDao = new RssLinkDao(db)
 
 
 const domParser = new DOMParser()
-const relevantKeywords = ["deno", "typescript", "javascript", "oak", "ecmascript", "console", "forEach"]
+const relevantKeywords = ["deno", "typescript", "javascript", "oak", "ecmascript", "console"]
 
 console.log("I am a worker!")
+
+const escapeRegex = (input:string) => {
+    return input.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+}
 
 const isRelevant = (title: string, summary: string): boolean => {
     let isRelevantTitle = title.split(" ").some(word => {
@@ -23,7 +27,7 @@ const isRelevant = (title: string, summary: string): boolean => {
 
     let isRelevantSummary = summary.split(" ").some(word => {
         return relevantKeywords.some(key => {
-            return key.match(new RegExp(word.toLowerCase(), 'gi')) !== null 
+            return key.match(new RegExp(`\\b${escapeRegex(word.toLowerCase())}\\b`, 'gi')) !== null 
         })
     })
 
@@ -36,7 +40,6 @@ async function wait(ms: number) {
       setTimeout(resolve, ms);
     });
 }
-
 
 const isAtom = (input: any): input is Feed => {
     return "entries" in input
@@ -138,6 +141,7 @@ const poll = () => {
 
 
 if (config()["PAUSE"] !== "true") {
+console.log("first poll")
 poll()
 setInterval(() => {
     poll()

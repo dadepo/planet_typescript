@@ -1,4 +1,4 @@
-import { Application, Router, RouterContext }  from "./deps.ts"
+import { Application, Router, RouterContext, send }  from "./deps.ts"
 import { indexHandler, submitHandler, submitHandlerProcessor, postVoteHandler } from "./handlers/handlers.ts";
 import { hidePostHandler, pendingGetHandler } from "./handlers/admin.ts";
 
@@ -17,9 +17,17 @@ router.post("/admin/pending/visibility", isIPAllowed, hidePostHandler)
 router.post("/vote", postVoteHandler)
 router.post("/submit", submitHandlerProcessor)
 
+
+router.get("/style/:filename", async (ctx: RouterContext) => {      
+    ctx.response.status = 200
+    await send(ctx, ctx.params.filename!, {
+        root: `${Deno.cwd()}/views/style`
+    })
+});
+
 // Find a better way for a fall through
 // this depends on the location
-router.get("/(.*)", async (context: RouterContext) => {      
+router.get("/(.*)", (context: RouterContext) => {      
     context.response.status = 404;
     context.response.body = "404 | Page not Found";
 });

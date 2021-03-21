@@ -1,5 +1,6 @@
 <html>
     <head>
+        <link rel="stylesheet" href="./style/home.css">
         <script type="text/javascript">
         const voteUp = async (id) => {
             let res = await fetch("http://localhost:4300/vote", 
@@ -28,15 +29,14 @@
         </script>
     </head>
     <body>
+        <div id='header'>PlanetTypescript</div>
         <% if (links.length > 0) { %>
-            <ul>
+            <ul id="list_links">
                 <% for(var i=0; i < links.length; i++) { %>
                     <li>
-                        <%- links[i].title %> Votes: <span id="vote-<%= links[i].id %>"><%= links[i].votes %> </span> | 
+                        <span><a class="go_link" href="<%= links[i].source %>"><%- links[i].title %></a></span> Votes: <span id="vote-<%= links[i].id %>"><%= links[i].votes %> </span> 
                         <span id="<%= links[i].id %>" onclick="voteUp('<%= links[i].id %>')">up</span> | <span id="<%= links[i].id %>" onclick="voteDown('<%= links[i].id %>')">down</span><br/>
-                        <%= links[i].source %> <br/>
-                        <%= links[i].summary %> <br/>
-                        <hr/>
+                        <%= links[i].summary %>
                     </li>
                 
                  <% } %>
