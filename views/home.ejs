@@ -29,7 +29,14 @@
         </script>
     </head>
     <body>
-        <div id='header'>PlanetTypescript</div>
+        <header>
+            PlanetTypescript
+            <nav>
+                Top | Recent | Random
+            </nav>
+        </header>
+        <main>
+        <article>
         <% if (links.length > 0) { %>
             <ul id="list_links">
                 <% for(var i=0; i < links.length; i++) { %>
@@ -45,5 +52,11 @@
           <% } else {%>
             No posts yet
         <% } %>
+        </article>
+        <aside>
+            Sidebar
+        </aside>
+        </main>
+    <footer>Footer</footer>
     </body>
 </html>
