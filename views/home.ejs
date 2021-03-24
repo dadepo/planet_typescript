@@ -30,7 +30,7 @@
     </head>
     <body>
         <header>
-            PlanetTypescript
+            <div id="title">PlanetTypescript</div>
             <nav>
                 Top | Recent | Random
             </nav>
@@ -43,7 +43,7 @@
                     <li>
                         <span><a class="go_link" href="<%= links[i].source %>"><%- links[i].title %></a></span> Votes: <span id="vote-<%= links[i].id %>"><%= links[i].votes %> </span> 
                         <span id="<%= links[i].id %>" onclick="voteUp('<%= links[i].id %>')">up</span> | <span id="<%= links[i].id %>" onclick="voteDown('<%= links[i].id %>')">down</span><br/>
-                        <%= links[i].summary %>
+                        <!-- <%= links[i].summary %> -->
                     </li>
                 
                  <% } %>
@@ -54,7 +54,7 @@
         <% } %>
         </article>
         <aside>
-            Sidebar
+            
         </aside>
         </main>
     <footer>Footer</footer>

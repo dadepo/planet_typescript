@@ -3,7 +3,8 @@ html, body {
     margin: 0;
 }
 body {
-    font-family: Arial, 'DejaVu Sans', 'Liberation Sans', Freesans, sans-serif;
+    /* font-family: Arial, 'DejaVu Sans', 'Liberation Sans', Freesans, sans-serif; */
+    font-family: "helvetica neue", arial, sans-serif;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -13,7 +14,15 @@ body {
 
 header {
     height: 50px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    padding-left:2.5%;
 }
+
+header #title {
+    font-weight: bolder;
+} 
 
 main {
     flex: auto;
@@ -42,7 +51,16 @@ ul#list_links {
     list-style: none;
 }
 
+ul#list_links li {
+    padding: 5px 0px;
+}
+
 .go_link {
     text-decoration: none;
+    font-name: "helvetica neue", arial, sans-serif;
+    font-size: 15.3333px;
+    font-weight: 700;
+    line-height: 19.3333px;
+    color: rgb(37, 98, 220)
 }
 
