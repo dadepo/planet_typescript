@@ -13,18 +13,6 @@
                 document.getElementById(`vote-${id}`).innerHTML = payload.voteValue;
             }
         }
-
-        const voteDown = async (id) => {
-            let res = await fetch("http://localhost:4300/vote", 
-            { method: 'POST', 
-            headers: {'Content-Type': 'application/json'}, 
-            body: JSON.stringify({id, value: -1})})
-
-            if (res.status === 200) {
-                let payload = (await res.json())
-                document.getElementById(`vote-${id}`).innerHTML = payload.voteValue;
-            }
-        }
         
         </script>
     </head>
@@ -42,7 +30,7 @@
                 <% for(var i=0; i < links.length; i++) { %>
                     <li>
                         <span><a class="go_link" href="<%= links[i].source %>"><%- links[i].title %></a></span> Votes: <span id="vote-<%= links[i].id %>"><%= links[i].votes %> </span> 
-                        <span id="<%= links[i].id %>" onclick="voteUp('<%= links[i].id %>')">up</span> | <span id="<%= links[i].id %>" onclick="voteDown('<%= links[i].id %>')">down</span><br/>
+                        <span id="<%= links[i].id %>" onclick="voteUp('<%= links[i].id %>')">up</span><br/>
                         <!-- <%= links[i].summary %> -->
                     </li>
                 
