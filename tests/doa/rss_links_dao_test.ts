@@ -6,7 +6,7 @@ import { Success } from "../../lib.ts";
 Deno.test("Successful submission if not submitted before", () => {
     const sut = new RssLinkDao(new DB(":memory:"))
     
-    let result = sut.saveLink("https://www.example.com")
+    let result = sut.saveSubmittedLink("https://www.example.com")
 
     assertEquals(result.kind, "success");
     assertEquals((result as Success<boolean>).value, true);
@@ -21,7 +21,7 @@ Deno.test("Successfully update link", async () => {
 
     assertEquals(count1[0], 0);
     
-    await sut.saveLink("https://www.example.com")
+    await sut.saveSubmittedLink("https://www.example.com")
     await sut.updateLink("https://www.example.com", updatedLink)
 
     const [count2] = db.query("SELECT count(*) from rss_links where link = ?", [updatedLink])
@@ -32,9 +32,13 @@ Deno.test("Successfully update link", async () => {
 Deno.test("Successful get all posts", async () => {
     const sut = new RssLinkDao(new DB(":memory:"))
     
-    await sut.saveLink("https://www.example.com")
-    await sut.saveLink("https://www.example1.com")
-    await sut.saveLink("https://www.example2.com")
+    await sut.saveSubmittedLink("https://www.example.com")
+    await sut.saveSubmittedLink("https://www.example1.com")
+    await sut.saveSubmittedLink("https://www.example2.com")
+
+    await sut.updateLink("https://www.example.com", "https://www.example.com")
+    await sut.updateLink("https://www.example1.com", "https://www.example1.com")
+    await sut.updateLink("https://www.example2.com", "https://www.example2.com")
 
     const result = sut.getAllLinks()
     switch(result.kind) {

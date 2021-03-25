@@ -37,11 +37,13 @@ const processLink = async (link: string) => {
         } else {
             console.log("Cant retrieve rss")
         }
+    } else {
+        await rssLinkDao.updateLink(link, link)
     }
 
     try {
         await deserializeFeed(xml, { outputJsonFeed: true });
-        rssLinkDao.saveLink(link)
+        rssLinkDao.saveSubmittedLink(link)
     } catch(ex) {
         console.log(ex.message)
     }
