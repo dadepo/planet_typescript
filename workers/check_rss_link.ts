@@ -15,40 +15,28 @@ self.onmessage = async (e: any) => {
 
 const processLink = async (link: string) => {
     const resp = await fetch(link)
-    let xml = await resp.text()
+    let contentOfLink = await resp.text()
 
-    if (!isRSS(xml)) {
-        console.log("in here")
+    if (!isXML(contentOfLink)) {
         // parse the xml link
         // TODO fix all the type assertiong and probably don't recurse
-        const doc = new DOMParser().parseFromString(xml, "text/html")!;
-        
+        const doc = new DOMParser().parseFromString(contentOfLink, "text/html")!;
         let rssLink = doc.querySelector("link[type='application/rss+xml']")?.getAttribute("href") as string
         rssLink = rssLink ?? doc.querySelector("link[type='application/atom+xml']")?.getAttribute("href") as string
         if (!rssLink.includes("http")) {
             rssLink = `${link}/${rssLink}`
         }
-        
         if (rssLink) {
-            const resp = await fetch(rssLink)
-            link = rssLink;
-            await rssLinkDao.updateLink(link, rssLink)
-            xml = await resp.text()
+            await rssLinkDao.saveSubmittedLink(new URL(link).origin, rssLink)
         } else {
             console.log("Cant retrieve rss")
         }
     } else {
-        await rssLinkDao.updateLink(link, link)
-    }
-
-    try {
-        await deserializeFeed(xml, { outputJsonFeed: true });
-        rssLinkDao.saveSubmittedLink(link)
-    } catch(ex) {
-        console.log(ex.message)
+        let website:any = await deserializeFeed(contentOfLink, { outputJsonFeed: true });
+        await rssLinkDao.saveSubmittedLink(new URL(website.feed.home_page_url!).origin, link)
     }
 }
 
-const isRSS = (content: string) => {
+const isXML = (content: string) => {
     return content.includes("<?xml")
 }

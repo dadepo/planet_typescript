@@ -41,7 +41,7 @@ export const submitHandlerProcessor = async (ctx: RouterContext) => {
     const submit = data.get("link")
 
     if (submit) {
-
+        console.log("submitting", submit)
         const result: Result<boolean> = pendingDao.submitLink(submit)
         switch(result.kind) {
             case ("success"): {
@@ -62,7 +62,7 @@ export const submitHandlerProcessor = async (ctx: RouterContext) => {
             }
             case ("fail"):
                 ctx.response.status = 501
-                ctx.response.body = "Something went wrong"
+                ctx.response.body = result.message
                 break;
         }
 

@@ -17,20 +17,21 @@ const relevantKeywords = ["deno", "typescript", "javascript", "oak", "ecmascript
 console.log("I am a worker!")
 
 const escapeRegex = (input:string) => {
-    return input.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    return input.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&').replace(/[^a-zA-Z ]/g, "");
 }
 
 const isRelevant = (title: string, summary: string): boolean => {
-    let isRelevantTitle = title.split(" ").some(word => {
-        return relevantKeywords.includes(word.toLowerCase())
+    let isRelevantTitle = title.toLowerCase().split(" ").some(word => {
+        return relevantKeywords.some(key => {
+            return word.trim() && key.match(new RegExp(`\\b${escapeRegex(word.toLowerCase())}\\b`, 'gi')) !== null
+        })
     })
 
     let isRelevantSummary = summary.split(" ").some(word => {
         return relevantKeywords.some(key => {
-            return key.match(new RegExp(`\\b${escapeRegex(word.toLowerCase())}\\b`, 'gi')) !== null 
+            return word.trim() && key.match(new RegExp(`\\b${escapeRegex(word.toLowerCase())}\\b`, 'gi')) !== null
         })
     })
-
     return isRelevantTitle || isRelevantSummary;
 }
 
@@ -125,7 +126,7 @@ const poll_rss_link = async (rssLink: string) => {
 
 
 const poll = () => {
-    let result = rssLinkDao.getAllLinks()
+    let result = rssLinkDao.getAllRSSLinks()
     switch(result.kind) {
         case ("fail"): {
             break
@@ -141,7 +142,7 @@ const poll = () => {
 
 
 if (config()["PAUSE"] !== "true") {
-console.log("first poll")
+console.log("first polling")
 poll()
 setInterval(() => {
     poll()
