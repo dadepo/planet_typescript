@@ -3,9 +3,9 @@
         <link rel="stylesheet" href="./style/home.css">
         <script type="text/javascript">
         const voteUp = async (id) => {
-            let res = await fetch("http://localhost:4300/vote", 
-            { method: 'POST', 
-            headers: {'Content-Type': 'application/json'}, 
+            let res = await fetch("http://localhost:4300/vote",
+            { method: 'POST',
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({id, value: 1})})
 
             if (res.status === 200) {
@@ -13,7 +13,7 @@
                 document.getElementById(`vote-${id}`).innerHTML = payload.voteValue;
             }
         }
-        
+
         </script>
     </head>
     <body>
@@ -29,11 +29,20 @@
             <ul id="list_links">
                 <% for(var i=0; i < links.length; i++) { %>
                     <li>
-                        <span><a class="go_link" href="<%= links[i].source %>"><%- links[i].title %></a></span> Votes: <span id="vote-<%= links[i].id %>"><%= links[i].votes %> </span> 
-                        <span id="<%= links[i].id %>" onclick="voteUp('<%= links[i].id %>')">up</span><br/>
+                        <div id="link_wrapper">
+
+                        <div id="vote_wrapper">
+                        <span onclick="voteUp('<%= links[i].id %>')" class="arrow-up" id="vote-<%= links[i].id %>" >
+                            <%= links[i].votes %>
+                        </span>
+                        </div>
+
+                            <span><a class="go_link" href="<%= links[i].source %>"><%- links[i].title %></a></span>
+
                         <!-- <%= links[i].summary %> -->
+                        </div>
                     </li>
-                
+
                  <% } %>
             </ul>
             <div><a href="?page=<%= page %>">More</a></div>
@@ -42,7 +51,7 @@
         <% } %>
         </article>
         <aside>
-            
+
         </aside>
         </main>
     <footer>Footer</footer>

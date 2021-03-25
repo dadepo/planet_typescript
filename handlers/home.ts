@@ -26,6 +26,7 @@ export const indexHandler = async (ctx: RouterContext) => {
                 const links = [...values]
                 ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/home.ejs`, {
                     links: links.map(link => {
+                        link.votes = link.votes ? link.votes : 0
                         return Object.assign(link, {
                             summary: link.summary.split(" ").splice(0, 30).join(" ") ?? ""
                         });
