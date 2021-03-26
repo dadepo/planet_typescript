@@ -56,7 +56,7 @@ const isRss2 = (input: any): input is RSS2 => {
 
 type Item = {title: string, summary: string, url: string}
 
-const poll_rss_link = async (rssLink: string) => {
+const poll_rss_link = async (website:string, rssLink: string) => {
     const xml = await fetch(rssLink).then(resp => resp.text())
     const { feed, feedType } = await deserializeFeed(xml);
 
@@ -105,8 +105,7 @@ const poll_rss_link = async (rssLink: string) => {
             case ("success"): {
                 if (relevant) {
                     if (result.value === 0) {
-                        console.log("saving", url)
-                        relevantPostDao.savePost(url, title, doc.textContent)
+                        relevantPostDao.savePost(website, url, title, doc.textContent)
                     } else {
                         console.log("already saved", url)
                     }
@@ -119,6 +118,7 @@ const poll_rss_link = async (rssLink: string) => {
                 console.log("Error", result.message)
                 break;
             }
+
         }
         await wait(5000);
     }
@@ -132,8 +132,8 @@ const poll = () => {
             break
         }
         case ("success"): {
-            for (const [link] of result.value!) {
-                poll_rss_link(link)
+            for (const [website, link] of result.value!) {
+                poll_rss_link(website, link)
             }
             break
         }
