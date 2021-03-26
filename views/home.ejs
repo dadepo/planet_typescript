@@ -26,25 +26,22 @@
         <main>
         <article>
         <% if (links.length > 0) { %>
-            <ul id="list_links">
+
+
                 <% for(var i=0; i < links.length; i++) { %>
-                    <li>
-                        <div id="link_wrapper">
 
-                        <div id="vote_wrapper">
-                        <span onclick="voteUp('<%= links[i].id %>')" class="arrow-up" id="vote-<%= links[i].id %>" >
-                            <%= links[i].votes %>
-                        </span>
+                    <div class="link_wrapper">
+                        <div class="vote_wrapper" onclick="voteUp('<%= links[i].id %>')">
+                            <div class="arrow-up"></div>
+                            <div class="vote" id="vote-<%= links[i].id %>"><%= links[i].votes %></div>
                         </div>
 
-                            <span><a class="go_link" href="<%= links[i].source %>"><%- links[i].title %></a></span>
-
-                        <!-- <%= links[i].summary %> -->
+                        <div class="the_link">
+                            <a  class="go_link" href="<%= links[i].source %>"><%- links[i].title %></a>
                         </div>
-                    </li>
+                    </div>
 
                  <% } %>
-            </ul>
             <div><a href="?page=<%= page %>">More</a></div>
           <% } else {%>
             No posts yet

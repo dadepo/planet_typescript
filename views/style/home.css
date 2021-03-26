@@ -12,25 +12,45 @@ body {
     background-color: #fefefe;
 }
 
-#link_wrapper {
+.link_wrapper {
     display: flex;
     flex-direction: row;
 }
 
-#vote_wrapper {
+.vote_wrapper {
     display: flex;
     flex-direction: column;
     padding: 5px;
+}
+.vote {
+    text-align: center;
+    padding-left: 2px;
+}
+.vote:hover {
+    color: #333333;
 }
 
 .arrow-up {
     width: 0;
     height: 0;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-
-    border-bottom: 5px solid black;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 7px solid #aaa;
+    margin-left:3px
 }
+
+.arrow-up:hover {
+    border-bottom: 7px solid #333;
+}
+
+.vote_wrapper {
+    cursor: pointer;
+}
+
+.the_link {
+    padding:8px 0 0 5px;
+}
+
 
 header {
     height: 50px;
@@ -46,7 +66,6 @@ header #title {
 
 main {
     flex: auto;
-
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -55,6 +74,7 @@ main {
 main > article {
     flex: auto;
     overflow-y: scroll;
+    margin: 30px 0 0 30px;
 }
 
 main > aside {
@@ -67,13 +87,18 @@ footer {
 
 
 
-ul#list_links {
-    list-style: none;
+div#link_wrapper {
+    display:flex
 }
 
-ul#list_links li {
-    padding: 5px 0px;
+div#vote_wrapper {
+    width:20px;
+    border:0 solid black;
+    padding-left:3px;
+    padding-top:5px
 }
+
+
 
 .go_link {
     text-decoration: none;
