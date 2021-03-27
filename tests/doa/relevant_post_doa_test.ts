@@ -164,7 +164,7 @@ Deno.test({
             throw new Error(result.message);
         }
     }
-}})
+}} as any)
 
 
 Deno.test({
@@ -183,4 +183,4 @@ Deno.test({
     const result2 = sut.getAllVisiblePosts(0,10)
     const [[,link2]] = [...result2.value!]
     assertEquals(link2, "http://www.example1.com")
-}})
+}} as any)

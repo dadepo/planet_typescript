@@ -42,6 +42,6 @@ Deno.test({
             }
 
         }
-    }})
+    }} as any)
 
 

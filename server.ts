@@ -48,7 +48,7 @@ app.addEventListener("listen", evt => {
         deno: {
             namespace: true,
         }
-    });
+    } as any);
 
 })
 
