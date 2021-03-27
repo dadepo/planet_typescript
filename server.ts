@@ -27,6 +27,14 @@ router.get("/style/:filename", async (ctx: RouterContext) => {
     })
 });
 
+router.get("/images/:filename", async (ctx: RouterContext) => {
+    ctx.response.status = 200
+    await send(ctx, ctx.params.filename!, {
+        root: `${Deno.cwd()}/views/images`
+    })
+});
+
+
 // Find a better way for a fall through
 // this depends on the location
 router.get("/(.*)", (context: RouterContext) => {      
