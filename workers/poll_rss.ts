@@ -6,34 +6,15 @@ import { RssLinkDao } from "../dao/rss_links_dao.ts"
 import { db } from "../dao/db_connection.ts"
 import { Result } from "../lib.ts";
 import {config}  from "../deps.ts";
+import {isRelevant} from "../utils/patterns.ts";
 
 const relevantPostDao = new RelevantPostDao(db)
 const rssLinkDao = new RssLinkDao(db)
 
 
 const domParser = new DOMParser()
-const relevantKeywords = ["deno", "typescript", "javascript", "oak", "ecmascript", "console"]
 
 console.log("I am a worker!")
-
-const escapeRegex = (input:string) => {
-    return input.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&').replace(/[^a-zA-Z ]/g, "");
-}
-
-const isRelevant = (title: string, summary: string): boolean => {
-    let isRelevantTitle = title.toLowerCase().split(" ").some(word => {
-        return relevantKeywords.some(key => {
-            return word.trim() && key.match(new RegExp(`\\b${escapeRegex(word.toLowerCase())}\\b`, 'gi')) !== null
-        })
-    })
-
-    let isRelevantSummary = summary.split(" ").some(word => {
-        return relevantKeywords.some(key => {
-            return word.trim() && key.match(new RegExp(`\\b${escapeRegex(word.toLowerCase())}\\b`, 'gi')) !== null
-        })
-    })
-    return isRelevantTitle || isRelevantSummary;
-}
 
 
 async function wait(ms: number) {
@@ -96,9 +77,8 @@ const poll_rss_link = async (website:string, rssLink: string) => {
         let url = item.url
 
         let doc: any = domParser.parseFromString(summary, "text/html")
-        let relevant = isRelevant(title, doc.textContent)
+        let relevant = isRelevant(title) || isRelevant(doc.textContent)
         // TODO first extract all the url and check in one go, instead of one by one
-
         let result: Result<number> = relevantPostDao.countBySource(url)
 
         switch(result.kind) {
