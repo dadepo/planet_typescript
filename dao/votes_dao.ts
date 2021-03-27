@@ -24,12 +24,14 @@ export class VoteDao {
 
   public updateVoteInfo(postId: number, votersIP: string, vote: number) {
     try {
-      return {
-        kind:"success",
-        value: this.db.query(
+      this.db.query(
           "REPLACE INTO votes (post_id, votes, voters_ip) VALUES (?, ?, ?)",
           [postId, vote, votersIP],
-        )
+      )
+      const currentVote = [...this.db.query("SELECT sum(votes) as votes FROM votes where post_id = ?", [postId])!.asObjects()][0]
+      return {
+        kind:"success",
+        value: currentVote.votes
       }
     } catch(e) {
       return {kind:"fail", message: (e as Error).message}

@@ -60,10 +60,11 @@ body {
     border: #aaaaaa 1px solid;
 }
 
-.website a {
+
+
+.no_underline_link {
     text-decoration: none;
 }
-
 
 header {
     height: 50px;

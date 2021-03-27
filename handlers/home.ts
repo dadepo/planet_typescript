@@ -15,8 +15,6 @@ export const indexHandler = async (ctx: RouterContext) => {
     }
 
     let limit = parseInt(ctx.request.url.searchParams.get("limit") ?? "30")
-    console.log("page", page)
-    console.log("limit", limit)
     const offset = page === 0 ? 0 : page + limit
     let results = relevantPostDao.getAllVisiblePosts(offset, limit as number)
     switch(results.kind) {

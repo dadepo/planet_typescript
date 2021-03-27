@@ -25,7 +25,7 @@ export class RelevantPostDao {
   public getAllVisiblePosts(offset: number, size: number) {
     try {
       const results = this.db.query(
-        "SELECT * from relevant_post r LEFT JOIN votes v ON r.id = v.post_id WHERE r.hidden = false limit ?,?",
+        "SELECT * from relevant_post r LEFT JOIN (select post_id, SUM(votes) as votes from votes group by post_id) v ON r.id = v.post_id WHERE r.hidden = false limit ?,?",
         [offset, size],
       );
 

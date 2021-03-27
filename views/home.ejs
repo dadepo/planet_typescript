@@ -3,10 +3,11 @@
         <link rel="stylesheet" href="./style/home.css">
         <script type="text/javascript">
         const voteUp = async (id) => {
-            let res = await fetch("http://localhost:4300/vote",
+            let res = await fetch("./vote",
             { method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({id, value: 1})})
+            body: JSON.stringify({id, value: 1})
+            })
 
             if (res.status === 200) {
                 let payload = (await res.json())
@@ -18,7 +19,7 @@
     </head>
     <body>
         <header>
-            <div id="title">PlanetTypescript</div>
+            <div id="title"><a href="./" class="no_underline_link">PlanetTypescript</a></div>
             <nav>
                 Top | Recent | Random
             </nav>
@@ -38,7 +39,7 @@
 
                         <div class="the_link">
                             <a class="go_link" href="<%= links[i].source %>"><%- links[i].title %></a>
-                            <span class="website"><a href="<%= links[i].website %>"><%= links[i].website %></a></span>
+                            <span class="website"><a class="no_underline_link" href="<%= links[i].website %>"><%= links[i].website %></a></span>
                         </div>
                     </div>
 

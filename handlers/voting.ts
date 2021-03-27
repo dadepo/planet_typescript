@@ -12,8 +12,8 @@ export const postVoteHandler = async (ctx: RouterContext) => {
 
     let postId = response.id
     let voteValue = response.value
-    let votersIP = ctx.request.headers.get('host') as string
-    let currentVote = 0
+    let votersIP = ctx.request.ip as string
+    let currentVoteByVoter = 0
 
 
     // learn more about destructing assignment and refactor
@@ -23,17 +23,16 @@ export const postVoteHandler = async (ctx: RouterContext) => {
     switch(result.kind) {
         case("success"): {
             const dbresult = [...result.value!]
-            currentVote = dbresult.length === 0 ? 0 : dbresult[0][1]
-            
-            if (currentVote === 0) {
+            currentVoteByVoter = dbresult.length === 0 ? 0 : dbresult[0][1]
+            if (currentVoteByVoter === 0) {
                 voteValue = 1
             } else {
                 voteValue = 0
             }
             
-            if (isVoteValid(voteValue, currentVote)) {
-                await voteDao.updateVoteInfo(postId, votersIP, voteValue)
-                ctx.response.body = {postId, voteValue, votersIP}
+            if (isVoteValid(voteValue, currentVoteByVoter)) {
+                const updated = await voteDao.updateVoteInfo(postId, votersIP, voteValue)!.value!
+                ctx.response.body = {postId, voteValue: updated, votersIP}
                 return
             } else {
                 ctx.response.status = 400
