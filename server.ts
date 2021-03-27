@@ -1,4 +1,4 @@
-import { Application, Router, RouterContext, send }  from "./deps.ts"
+import {Application, oakCors, Router, RouterContext, send} from "./deps.ts"
 import { submitHandler, submitHandlerProcessor} from "./handlers/handlers.ts";
 import { indexHandler } from "./handlers/home.ts";
 import { postVoteHandler } from "./handlers/voting.ts";
@@ -34,6 +34,7 @@ router.get("/(.*)", (context: RouterContext) => {
     context.response.body = "404 | Page not Found";
 });
 
+app.use(oakCors())
 app.use(router.routes())
 app.use(router.allowedMethods())
 app.addEventListener("error", evt => {
