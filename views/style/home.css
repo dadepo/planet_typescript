@@ -54,10 +54,18 @@ body {
 .website {
     font-family: "helvetica neue", arial, sans-serif;
     background-color: #fffcd7;
+
     border-radius: 5px;
     padding: 2px;
     font-size: 11px;
     border: #aaaaaa 1px solid;
+}
+
+.time_retrieved {
+    font-family: "helvetica neue", arial, sans-serif;
+    font-size: 11px;
+    color: #666;
+    margin: 0 5px;
 }
 
 

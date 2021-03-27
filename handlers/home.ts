@@ -3,6 +3,7 @@ import {RouterContext}  from "../deps.ts";
 
 import { db } from "../dao/db_connection.ts"
 import {renderFileToString} from "../deps.ts"
+import {getAgo} from "../utils/date_summarizer.ts";
 
 const relevantPostDao = new RelevantPostDao(db)
 
@@ -27,6 +28,7 @@ export const indexHandler = async (ctx: RouterContext) => {
                 ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/home.ejs`, {
                     links: links.map(link => {
                         link.votes = link.votes ? link.votes : 0
+                        link.timestamp = getAgo(link.timestamp, Date.now())
                         link.website = new URL(link.website).origin
                         return Object.assign(link, {
                             summary: link.summary.split(" ").splice(0, 30).join(" ") ?? ""
