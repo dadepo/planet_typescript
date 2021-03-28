@@ -5,12 +5,15 @@ import { postVoteHandler } from "./handlers/voting.ts";
 import { hidePostHandler, pendingGetHandler } from "./handlers/admin.ts";
 
 import { isIPAllowed } from "./middleware/ip_check.ts"
+import {recentHandler} from "./handlers/recent.ts";
 
 const app = new Application()
 const router = new Router();
 
 router.get("/", indexHandler)
 router.get("/index", indexHandler)
+router.get("/recent", recentHandler)
+
 router.get("/submit", submitHandler)
 router.get("/admin/pending/:page", isIPAllowed, pendingGetHandler)
 

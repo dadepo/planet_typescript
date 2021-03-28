@@ -8,7 +8,7 @@ import {getAgo} from "../utils/date_summarizer.ts";
 const relevantPostDao = new RelevantPostDao(db)
 
 
-export const indexHandler = async (ctx: RouterContext) => {
+export const recentHandler = async (ctx: RouterContext) => {
     let page = parseInt(ctx.request.url.searchParams.get("page")  ?? "0")
 
     if (page === 1) {
@@ -17,7 +17,7 @@ export const indexHandler = async (ctx: RouterContext) => {
 
     let limit = parseInt(ctx.request.url.searchParams.get("limit") ?? "30")
     const offset = page === 0 ? 0 : page + limit
-    let results = relevantPostDao.getAllVisiblePostsOrderByVotes(offset, limit as number)
+    let results = relevantPostDao.getAllVisiblePostsOrderByTime(offset, limit as number)
     switch(results.kind) {
         case ("success"): {
 

@@ -45,7 +45,7 @@ Deno.test({
         sut.savePost("http://www.example1.com", "http://www.example1.com/rss.xml", "title1", "summary1")
         sut.savePost("http://www.example2.com", "http://www.example2.com/rss.xml", "title2", "summary2")
 
-        let [first, second] = sut.getAllVisiblePosts(0,2).value!.asObjects()
+        let [first, second] = sut.getAllVisiblePostsOrderByVotes(0,2).value!.asObjects()
 
         // assertEquals(first.id, 1);
         assertEquals(first.source, "http://www.example1.com/rss.xml");
@@ -74,14 +74,14 @@ Deno.test("Successful retrieval of posts by links using offset and size", () => 
     sut.savePost("http://www.example3.com", "http://www.example3.com/rss.xml", "title3", "summary3")
     sut.savePost("http://www.example4.com", "http://www.example4.com/rss.xml", "title4", "summary4")
     
-    let result = sut.getAllVisiblePosts(1,2)
+    let result = sut.getAllVisiblePostsOrderByVotes(1,2)
 
     switch(result.kind) {
         case("fail"): {
             throw new Error(result.message);
         }
         case ("success"): {
-            let [second, third] = sut.getAllVisiblePosts(1,2).value!.asObjects()
+            let [second, third] = sut.getAllVisiblePostsOrderByVotes(1,2).value!.asObjects()
             
             assertEquals(second.id, 2);
             assertEquals(second.source, "http://www.example2.com/rss.xml");
@@ -148,14 +148,14 @@ Deno.test({
     new VoteDao(db)
     const sut = new RelevantPostDao(db)
     sut.savePost("http://www.example1.com", "http://www.example1.com/rss.xml", "title1", "summary1")
-    let result = sut.getAllVisiblePosts(0,10)
+    let result = sut.getAllVisiblePostsOrderByVotes(0,10)
 
     switch(result.kind) {
         case("success"): {
             const [[,link]] = [...result.value!]
             assertEquals(link, "http://www.example1.com")
             sut.hidePost(1) // id will be 1
-            const result2 = sut.getAllVisiblePosts(0,10)
+            const result2 = sut.getAllVisiblePostsOrderByVotes(0,10)
             const link2 = [...result2.value!]
             assertEquals(link2, [])
             break
@@ -176,11 +176,11 @@ Deno.test({
     const sut = new RelevantPostDao(db)
     sut.savePost("http://www.example1.com", "http://www.example1.com/rss.xml", "title1", "summary1")
     sut.hidePost(1)
-    let result = sut.getAllVisiblePosts(0,10)
+    let result = sut.getAllVisiblePostsOrderByVotes(0,10)
     const link = [...result.value!]
     assertEquals(link, [])
     sut.showPost(1)
-    const result2 = sut.getAllVisiblePosts(0,10)
+    const result2 = sut.getAllVisiblePostsOrderByVotes(0,10)
     const [[,link2]] = [...result2.value!]
     assertEquals(link2, "http://www.example1.com")
 }} as any)
