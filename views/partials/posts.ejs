@@ -1,0 +1,27 @@
+<% if (links.length > 0) { %>
+
+
+    <% for(var i=0; i < links.length; i++) { %>
+
+        <div class="link_wrapper">
+            <div class="vote_wrapper" onclick="voteUp('<%= links[i].id %>')">
+                <div class="arrow-up"></div>
+                <div class="vote" id="vote-<%= links[i].id %>"><%= links[i].votes %></div>
+            </div>
+
+            <div class="the_link">
+                <a class="go_link" href="<%= links[i].source %>"><%- links[i].title %></a>
+                <span class="website">
+                                <a class="no_underline_link" href="<%= links[i].website %>"><%= links[i].website %></a>
+                            </span>
+                <span class="time_retrieved">
+                                retrieved: <%= links[i].timestamp %>
+                            </span>
+            </div>
+        </div>
+
+    <% } %>
+    <div><a href="?page=<%= page %>">More</a></div>
+<% } else {%>
+    No posts yet
+<% } %>
