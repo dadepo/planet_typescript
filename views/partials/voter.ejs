@@ -1,0 +1,14 @@
+<script type="text/javascript">
+    const voteUp = async (id) => {
+        let res = await fetch("./vote",
+            { method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({id, value: 1})
+            })
+
+        if (res.status === 200) {
+            let payload = (await res.json())
+            document.getElementById(`vote-${id}`).innerHTML = payload.voteValue;
+        }
+    }
+</script>

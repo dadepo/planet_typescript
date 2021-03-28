@@ -1,21 +1,8 @@
 <html>
     <head>
         <link rel="stylesheet" href="./style/home.css">
-        <script type="text/javascript">
-        const voteUp = async (id) => {
-            let res = await fetch("./vote",
-            { method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({id, value: 1})
-            })
-
-            if (res.status === 200) {
-                let payload = (await res.json())
-                document.getElementById(`vote-${id}`).innerHTML = payload.voteValue;
-            }
-        }
-
-        </script>
+        <%- await include('views/partials/voter.ejs') %>
+        <title>Home</title>
     </head>
     <body>
         <header>
@@ -24,7 +11,7 @@
         <main>
         <article>
             <nav>
-                <a class="no_underline_link" href="./">Top</a> |  <a class="no_underline_link" href="./recent">Recent</a>
+                <%- await include('views/partials/nav.ejs') %>
             </nav>
             <%- await include('views/partials/posts.ejs', {links, page}) %>
         </article>
