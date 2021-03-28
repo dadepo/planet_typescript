@@ -56,6 +56,10 @@ body {
     padding:8px 0 0 5px;
 }
 
+nav {
+    margin-bottom: 10px;
+}
+
 .website {
     font-family: "helvetica neue", arial, sans-serif;
     background-color: #fffcd7;
@@ -127,8 +131,6 @@ div#vote_wrapper {
     padding-left:3px;
     padding-top:5px
 }
-
-
 
 .go_link {
     text-decoration: none;
