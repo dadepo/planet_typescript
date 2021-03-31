@@ -13,7 +13,6 @@ jobs:
       run: |
         echo $PTS | docker login ghcr.io -u dadepo --password-stdin
         docker build . --tag ghcr.io/dadepo/planet-typescript:latest
-        docker run ghcr.io/dadepo/planet-typescript:latest
         docker push ghcr.io/ddepo/planet-typescript:latest
       env:
         PTS: ${{ secrets.PTS }}
