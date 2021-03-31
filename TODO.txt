@@ -10,3 +10,4 @@
 - add list website
 - poll submission to links
 - bookmark this page
+- move env out of image
