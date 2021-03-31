@@ -1,5 +1,7 @@
 FROM debian:buster-slim
 
+LABEL org.opencontainers.image.source="https://github.com/dadepo/tsfeed"
+
 ENV DENO_VERSION=1.8.2
 
 RUN apt-get -qq update \
@@ -20,6 +22,8 @@ ENV DENO_DIR /deno-dir/
 WORKDIR /tmp/build
 COPY . .
 RUN deno bundle --unstable server.ts /usr/bin/bundle.js
+
+
 
 EXPOSE 4300/tcp
 
