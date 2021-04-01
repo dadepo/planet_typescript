@@ -1,0 +1,28 @@
+name: CI
+on: [push]
+jobs:
+  deploy:
+    name: "Deploy to staging"
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    # needs: test
+    steps:
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/staging.key
+          chmod 600 ~/.ssh/staging.key
+          cat >>~/.ssh/config <<END
+          Host staging
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/staging.key
+            StrictHostKeyChecking no
+          END
+        env:
+          SSH_USER: "ec2-user"
+          SSH_KEY: ${{ secrets.PKI }}
+          SSH_HOST: "ec2-54-160-69-3.compute-1.amazonaws.com"
+
+      - name: run script
+        run: ssh staging 'sudo /tmp/hello.sh'
