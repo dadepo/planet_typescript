@@ -25,4 +25,4 @@ jobs:
           SSH_HOST: "ec2-54-160-69-3.compute-1.amazonaws.com"
 
       - name: run script
-        run: ssh -vv staging 'touch /tmp/lol.sh'
+        run: ssh -vv staging 'cd && ./hello.sh'
