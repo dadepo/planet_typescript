@@ -25,4 +25,4 @@ jobs:
           SSH_HOST: "ec2-54-160-69-3.compute-1.amazonaws.com"
 
       - name: run script
-        run: ssh -i $SSH_KEY ec2-user@ec2-54-160-69-3.compute-1.amazonaws.com 'sudo /tmp/hello.sh'
+        run: ssh -vv -i $SSH_KEY ec2-user@ec2-54-160-69-3.compute-1.amazonaws.com 'sudo /tmp/hello.sh'
