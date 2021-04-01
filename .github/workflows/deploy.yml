@@ -2,7 +2,7 @@ name: CI
 on: [push]
 jobs:
   deploy:
-    name: "Deploy to stagings"
+    name: "Deploy to staging"
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     # needs: test
