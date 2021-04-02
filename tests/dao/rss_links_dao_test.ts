@@ -45,3 +45,25 @@ Deno.test({
     }} as any)
 
 
+Deno.test({
+    name: "Successfully get all non hidden posts",
+    only: false,
+    async fn() {
+        const sut = new RssLinkDao(new DB(":memory:"))
+
+        await sut.saveSubmittedLink("https://www.example.com", "https://www.example.com/rss.xml")
+        await sut.saveSubmittedLink("https://www.example1.com", "https://www.example1.com/rss.xml")
+        await sut.saveSubmittedLink("https://www.example2.com", "https://www.example2.com/rss.xml")
+
+        let results = [...(sut.getAllActiveRSSLinks() as Success<any>).value]
+        assertEquals(results.length, 0)
+
+        await sut.showPost(1)
+        results = [...(sut.getAllActiveRSSLinks() as Success<any>).value]
+        assertEquals(results.length, 1)
+
+        await sut.hidePost(1)
+        results = [...(sut.getAllActiveRSSLinks() as Success<any>).value]
+        assertEquals(results.length, 0)
+    }
+} as any)

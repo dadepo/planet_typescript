@@ -106,14 +106,14 @@ const poll_rss_link = async (website:string, rssLink: string) => {
 
 
 const poll = () => {
-    let result = rssLinkDao.getAllRSSLinks()
+    let result = rssLinkDao.getAllActiveRSSLinks()
     switch(result.kind) {
         case ("fail"): {
             break
         }
         case ("success"): {
+            console.log("working")
             for (const [,website, link] of result.value!) {
-                console.log(1111, website, link)
                 poll_rss_link(website, link)
             }
             break
