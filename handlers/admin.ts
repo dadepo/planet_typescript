@@ -21,7 +21,7 @@ export const hidePostHandler = async (ctx: RouterContext) => {
 
 export const pendingGetHandler = async (ctx: RouterContext) => {
     let offset = 0;
-    const count = 10;
+    const count = 30;
 
     if (ctx.params.page !== "1") {
         offset = (parseInt(ctx.params.page!) - 1) * count
