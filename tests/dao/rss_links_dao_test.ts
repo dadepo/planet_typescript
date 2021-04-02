@@ -31,13 +31,13 @@ Deno.test({
             case("success"):{
                 const [link1, link2, link3] = sut.getAllRSSLinks().value!
 
-                assertEquals(link1[1], "https://www.example.com/rss.xml");
-                assertEquals(link2[1], "https://www.example1.com/rss.xml");
-                assertEquals(link3[1], "https://www.example2.com/rss.xml");
+                assertEquals(link1[2], "https://www.example.com/rss.xml");
+                assertEquals(link2[2], "https://www.example1.com/rss.xml");
+                assertEquals(link3[2], "https://www.example2.com/rss.xml");
 
-                assertEquals(link1[0], "https://www.example.com");
-                assertEquals(link2[0], "https://www.example1.com");
-                assertEquals(link3[0], "https://www.example2.com");
+                assertEquals(link1[1], "https://www.example.com");
+                assertEquals(link2[1], "https://www.example1.com");
+                assertEquals(link3[1], "https://www.example2.com");
                 break
             }
 

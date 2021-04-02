@@ -1,0 +1,30 @@
+<html>
+<head>
+    <script type="text/javascript">
+    </script>
+</head>
+<body>
+<% if (links.length > 0) { %>
+    <table>
+        <tr>
+            <th>id</th>
+            <th>Website</th>
+            <th>Rss Links</th>
+            <th>Timestamp</th>
+        </tr>
+
+        <% links.forEach(function(link){ %>
+            <tr>
+                <td><%= link.id %></td>
+                <td><%= link.website %></td>
+                <td><%= link.rss_link %></td>
+                <td><%= new Date(link.timestamp) %></td>
+            </tr>
+        <% }); %>
+
+    </table>
+<% } else {%>
+    No posts yet
+<% } %>
+</body>
+</html>

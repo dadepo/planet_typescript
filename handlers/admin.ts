@@ -2,8 +2,10 @@ import {RouterContext}  from "../deps.ts";
 import {renderFileToString} from "../deps.ts"
 import { RelevantPostDao } from "../dao/relevant_post_dao.ts"
 import { db } from "../dao/db_connection.ts"
+import {RssLinkDao} from "../dao/rss_links_dao.ts";
 
 const relevantPostDao = new RelevantPostDao(db)
+const rssLinkDao = new RssLinkDao(db)
 
 export const hidePostHandler = async (ctx: RouterContext) => {
     let response = await ctx.request.body({type: "json"}).value
@@ -37,6 +39,32 @@ export const pendingGetHandler = async (ctx: RouterContext) => {
                 const links = [...values]
                 
                 ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/pending_submissions.ejs`, {
+                    links:links
+                })
+            } else {
+                ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/home.ejs`, {
+                    links: []
+                })
+            }
+            break
+        }
+        case ("fail"): {
+            ctx.response.body = results.message;
+        }
+    }
+}
+
+export const linksGetHandler = async (ctx: RouterContext) => {
+    let results = rssLinkDao.getAllRSSLinks()
+
+    switch(results.kind) {
+        case ("success"): {
+
+            const values = results.value?.asObjects()
+            if (values) {
+                const links = [...values]
+                console.log(777, links)
+                ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/admin/links.ejs`, {
                     links:links
                 })
             } else {

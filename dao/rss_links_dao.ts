@@ -22,7 +22,7 @@ export class RssLinkDao {
     try {
       return {
         kind:"success",
-        value:this.db.query("SELECT website, rss_link from rss_links")
+        value:this.db.query("SELECT id, website, rss_link, timestamp from rss_links")
       };
     } catch (e) {
       return { kind:"fail", message: (e as Error).message };
