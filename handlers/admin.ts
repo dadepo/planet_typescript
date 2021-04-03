@@ -63,7 +63,6 @@ export const linksGetHandler = async (ctx: RouterContext) => {
             const values = results.value?.asObjects()
             if (values) {
                 const links = [...values]
-                console.log(777, links)
                 ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/admin/links.ejs`, {
                     links:links
                 })
@@ -77,5 +76,19 @@ export const linksGetHandler = async (ctx: RouterContext) => {
         case ("fail"): {
             ctx.response.body = results.message;
         }
+    }
+}
+
+export const hideLinksPostHandler = async (ctx: RouterContext) => {
+    let response = await ctx.request.body({type: "json"}).value
+
+    if (response.action === "hide") {
+        rssLinkDao.hidePost(response.id)
+        ctx.response.status = 200
+    } else if (response.action === "show") {
+        rssLinkDao.showPost(response.id)
+        ctx.response.status = 200
+    } else {
+        ctx.response.status = 400
     }
 }

@@ -53,7 +53,7 @@ export const submitHandlerProcessor = async (ctx: RouterContext) => {
                         deno: {
                             namespace: true,
                         }
-                    });
+                    } as any);
         
                     checker.postMessage({link: submit})
                 }

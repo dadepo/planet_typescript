@@ -112,7 +112,6 @@ const poll = () => {
             break
         }
         case ("success"): {
-            console.log("working")
             for (const [,website, link] of result.value!) {
                 poll_rss_link(website, link)
             }

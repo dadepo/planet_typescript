@@ -2,7 +2,7 @@ import {Application, oakCors, Router, RouterContext, send} from "./deps.ts"
 import { submitHandler, submitHandlerProcessor} from "./handlers/handlers.ts";
 import { indexHandler } from "./handlers/home.ts";
 import { postVoteHandler } from "./handlers/voting.ts";
-import {hidePostHandler, linksGetHandler, pendingGetHandler} from "./handlers/admin.ts";
+import {hideLinksPostHandler, hidePostHandler, linksGetHandler, pendingGetHandler} from "./handlers/admin.ts";
 
 import { isIPAllowed } from "./middleware/ip_check.ts"
 import {recentHandler} from "./handlers/recent.ts";
@@ -17,6 +17,8 @@ router.get("/recent", recentHandler)
 router.get("/submit", submitHandler)
 router.get("/admin/pending/:page", isIPAllowed, pendingGetHandler)
 router.get("/admin/links", isIPAllowed, linksGetHandler)
+
+router.post("/admin/links/visibility", isIPAllowed, hideLinksPostHandler)
 router.post("/admin/pending/visibility", isIPAllowed, hidePostHandler)
 
 router.post("/vote", postVoteHandler)

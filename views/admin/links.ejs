@@ -1,6 +1,22 @@
 <html>
 <head>
     <script type="text/javascript">
+
+        const hide = (id) => {
+            fetch(`http://localhost:4300/admin/links/visibility`, {
+                method: "POST",
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({id, action:'hide'})
+            })
+        }
+
+        const show = (id) => {
+            fetch(`http://localhost:4300/admin/links/visibility`, {
+                method: "POST",
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({id, action:'show'})
+            })
+        }
     </script>
 </head>
 <body>
@@ -11,6 +27,8 @@
             <th>Website</th>
             <th>Rss Links</th>
             <th>Timestamp</th>
+            <th>Status</th>
+            <th>Actions</th>
         </tr>
 
         <% links.forEach(function(link){ %>
@@ -19,6 +37,15 @@
                 <td><%= link.website %></td>
                 <td><%= link.rss_link %></td>
                 <td><%= new Date(link.timestamp) %></td>
+                <% if (link.hidden === 0 || link.hidden === null) { %>
+                    <td><%= "visible" %></td>
+                <% } else { %>
+                    <td><%= "hidden" %></td>
+                <% }  %>
+                <td>
+                    <button onclick="hide(<%= link.id %>)" id="hide-<%= link.id %>" type="button">Hide</button> |
+                    <button onclick="show(<%= link.id %>)" id="show-<%= link.id %>" type="button">Show</button>
+                </td>
             </tr>
         <% }); %>
 

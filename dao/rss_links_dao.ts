@@ -5,7 +5,7 @@ export class RssLinkDao {
   constructor(private db: DB) {
     // contains the links that has been validated to be rss links
     this.db.query(
-      "CREATE TABLE IF NOT EXISTS rss_links (id INTEGER PRIMARY KEY AUTOINCREMENT, website TEXT UNIQUE, rss_link TEXT UNIQUE, timestamp INTEGER, hidden BOOLEAN)",
+      "CREATE TABLE IF NOT EXISTS rss_links (id INTEGER PRIMARY KEY AUTOINCREMENT, website TEXT UNIQUE, rss_link TEXT UNIQUE, timestamp INTEGER, hidden BOOLEAN DEFAULT false)",
     );
   }
 
@@ -22,7 +22,7 @@ export class RssLinkDao {
     try {
       return {
         kind:"success",
-        value:this.db.query("SELECT id, website, rss_link, timestamp from rss_links")
+        value:this.db.query("SELECT id, website, rss_link, timestamp, hidden from rss_links")
       };
     } catch (e) {
       return { kind:"fail", message: (e as Error).message };
