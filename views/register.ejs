@@ -1,0 +1,40 @@
+<html>
+<head>
+    <link rel="stylesheet" href="./style/home.css">
+    <%- await include('views/partials/voter.ejs') %>
+    <title>Home</title>
+</head>
+<body>
+<header>
+    <div id="title"><a href="./" class="no_underline_link">PlanetTypescript</a></div>
+</header>
+<main>
+    <article>
+
+        <form action="/register" method=post>
+            <div>
+                <label>Display Name:</label>
+                <input type="text" name="display_name" class="form-control">
+            </div>
+            <div>
+                <label>Email:</label>
+                <input type="email" name="email" class="form-control">
+            </div>
+            <div>
+                <label>Password:</label>
+                <input type="password" name="password" class="form-control">
+            </div>
+            <div>
+                <button type="submit" class="btn btn-primary">Register</button>
+            </div>
+
+        </form>
+
+    </article>
+    <aside>
+
+    </aside>
+</main>
+<%- await include('views/partials/footer.ejs') %>
+</body>
+</html>

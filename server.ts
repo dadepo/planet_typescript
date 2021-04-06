@@ -6,12 +6,22 @@ import {hideLinksPostHandler, hidePostHandler, linksGetHandler, pendingGetHandle
 
 import { isIPAllowed } from "./middleware/ip_check.ts"
 import {recentHandler} from "./handlers/recent.ts";
+import {
+    loginIndexGetHandler,
+    loginPostHandler,
+    logoutGetHandler,
+    registerIndexGetHandler,
+    registerPostHandler
+} from "./handlers/auth.ts";
+import {isAuthed} from "./middleware/auth_check.ts";
+import {hasCurrentUser} from "./middleware/has_currentuser_check.ts";
+
 
 const app = new Application()
 const router = new Router();
 
-router.get("/", indexHandler)
-router.get("/index", indexHandler)
+router.get("/", isAuthed, indexHandler)
+router.get("/index", isAuthed, indexHandler)
 router.get("/recent", recentHandler)
 
 router.get("/submit", submitHandler)
@@ -21,9 +31,16 @@ router.get("/admin/links", isIPAllowed, linksGetHandler)
 router.post("/admin/links/visibility", isIPAllowed, hideLinksPostHandler)
 router.post("/admin/pending/visibility", isIPAllowed, hidePostHandler)
 
-router.post("/vote", postVoteHandler)
+router.post("/vote", hasCurrentUser, postVoteHandler)
 router.post("/submit", submitHandlerProcessor)
 
+//auh routes
+router
+    .get("/register", registerIndexGetHandler)
+    .get("/login", loginIndexGetHandler)
+    .get("/logout", logoutGetHandler)
+    .post("/login", loginPostHandler)
+    .post("/register", registerPostHandler)
 
 router.get("/style/:filename", async (ctx: RouterContext) => {      
     ctx.response.status = 200
@@ -56,7 +73,7 @@ app.addEventListener("error", evt => {
 
 app.addEventListener("listen", evt => {
     // on server up, starts polling rss
-    new Worker(new URL("workers/poll_rss.ts", import.meta.url).href, { 
+    new Worker(new URL("workers/poll_rss.ts", import.meta.url).href, {
         type: "module",
         deno: {
             namespace: true,

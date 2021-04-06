@@ -10,3 +10,4 @@
 - add list website
 - poll submission to links
 - move env out of image
+- move secret token to env

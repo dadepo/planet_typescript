@@ -10,7 +10,6 @@ const relevantPostDao = new RelevantPostDao(db)
 
 export const indexHandler = async (ctx: RouterContext) => {
     let page = parseInt(ctx.request.url.searchParams.get("page")  ?? "0")
-
     if (page === 1) {
         page = 0
     }
@@ -34,7 +33,8 @@ export const indexHandler = async (ctx: RouterContext) => {
                             summary: link.summary.split(" ").splice(0, 30).join(" ") ?? ""
                         });
                     }),
-                    page: (page === 0) ? 2 : page + 1
+                    page: (page === 0) ? 2 : page + 1,
+                    currentUser: ctx.state.currentUser
                 })
             } else {
                 ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/home.ejs`, {

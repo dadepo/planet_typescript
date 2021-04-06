@@ -1,0 +1,36 @@
+<html>
+<head>
+    <link rel="stylesheet" href="./style/home.css">
+    <%- await include('views/partials/voter.ejs') %>
+    <title>Home</title>
+</head>
+<body>
+<header>
+    <div id="title"><a href="./" class="no_underline_link">PlanetTypescript</a></div>
+</header>
+<main>
+    <article>
+        <form action="/login" method=post>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" name="email" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" class="form-control" required>
+            </div>
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-primary">Login</button>
+                <div>
+                    <a href="/register">Create new account</a>
+                </div>
+            </div>
+        </form>
+    </article>
+    <aside>
+
+    </aside>
+</main>
+<%- await include('views/partials/footer.ejs') %>
+</body>
+</html>

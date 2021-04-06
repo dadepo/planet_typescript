@@ -85,12 +85,13 @@ nav {
 }
 
 header {
-    height: 50px;
+    height: 20px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     flex-wrap: nowrap;
-    padding-top: 7px;
+    padding-top: 10px;
     padding-left:2.5%;
+    gap: 51%
 }
 
 header #title {

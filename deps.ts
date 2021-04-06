@@ -9,3 +9,5 @@ export type { RSS1, RSS2, Feed } from 'https://deno.land/x/rss@0.3.3/mod.ts';
 export { assertEquals } from 'https://deno.land/std@0.90.0/testing/asserts.ts';
 export { config } from "https://deno.land/x/dotenv@v2.0.0/mod.ts";
 export { oakCors } from "https://deno.land/x/cors@v1.2.1/mod.ts";
+export * as bcrypt from "https://deno.land/x/bcrypt@v0.2.4/mod.ts";
+// export {create} from "https://deno.land/x/djwt@v2.2/mod.ts";

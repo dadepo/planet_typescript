@@ -9,6 +9,8 @@
         if (res.status === 200) {
             let payload = (await res.json())
             document.getElementById(`vote-${id}`).innerHTML = payload.voteValue;
+        } else if (res.status === 401) {
+            window.location.href = "/login"
         }
     }
 </script>
