@@ -11,3 +11,4 @@
 - poll submission to links
 - move env out of image
 - move secret token to env
+- If you create a new reset link, replace

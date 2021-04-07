@@ -1,0 +1,35 @@
+<html>
+<head>
+    <link rel="stylesheet" href="../style/home.css">
+    <title>Home</title>
+</head>
+<body>
+<header>
+    <div id="title"><a href="./" class="no_underline_link">PlanetTypescript</a></div>
+</header>
+<main>
+    <article>
+
+        <form action="/updatepassword" method=post>
+            <div>
+                <label>Email:</label>
+                <input type="email" name="email" class="form-control" readonly value="<%= email %>">
+            </div>
+            <div>
+                <label>New Password:</label>
+                <input type="password" name="new_password" class="form-control">
+            </div>
+            <div>
+                <button type="submit" class="btn btn-primary">Reset</button>
+            </div>
+
+        </form>
+
+    </article>
+    <aside>
+
+    </aside>
+</main>
+<%- await include('views/partials/footer.ejs') %>
+</body>
+</html>

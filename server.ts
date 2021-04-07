@@ -15,6 +15,12 @@ import {
 import {isAuthed} from "./middleware/auth_check.ts";
 import {hasCurrentUser} from "./middleware/has_currentuser_check.ts";
 import {isAdmin} from "./middleware/admin_user_check.ts";
+import {
+    renderPageGetHandler,
+    resetGetHandler,
+    sendResetLinkPostHandler,
+    updatePasswordPostHandler
+} from "./handlers/resetpass.ts";
 
 const app = new Application()
 const router = new Router();
@@ -33,6 +39,11 @@ router.post("/admin/pending/visibility", isAdmin, hidePostHandler)
 router.post("/vote", hasCurrentUser, postVoteHandler)
 router.post("/submit", submitHandlerProcessor)
 
+router
+    .get("/reset", resetGetHandler)
+    .get("/reset/:link", renderPageGetHandler)
+    .post("/reset", sendResetLinkPostHandler)
+
 //auh routes
 router
     .get("/register", registerIndexGetHandler)
@@ -40,6 +51,7 @@ router
     .get("/logout", logoutGetHandler)
     .post("/login", loginPostHandler)
     .post("/register", registerPostHandler)
+    .post("/updatepassword", updatePasswordPostHandler)
 
 router.get("/style/:filename", async (ctx: RouterContext) => {      
     ctx.response.status = 200

@@ -78,4 +78,17 @@ export class UserDao {
             return {kind:"fail", message: (e as Error).message}
         }
     }
+
+    updatePassword(email: string, passwordHash: string) {
+        try {
+            this.db.query("UPDATE users SET (password) = (?) where email = (?)", [passwordHash, email])
+
+            return {
+                kind:"success",
+                value: true
+            }
+        } catch(e) {
+            return {kind:"fail", message: (e as Error).message}
+        }
+    }
 }

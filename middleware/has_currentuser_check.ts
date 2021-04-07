@@ -1,5 +1,4 @@
 import {RouterContext, REDIRECT_BACK}  from "../deps.ts";
-import {config}  from "../deps.ts";
 
 export const hasCurrentUser = async (ctx: RouterContext, next: Function) => {
     if(!ctx.state.currentUser) {

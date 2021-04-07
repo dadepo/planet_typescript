@@ -1,0 +1,27 @@
+<html>
+<head>
+    <link rel="stylesheet" href="../style/home.css">
+    <title>Home</title>
+</head>
+<body>
+<header>
+    <div id="title"><a href="./" class="no_underline_link">PlanetTypescript</a></div>
+</header>
+<main>
+    <article>
+        <div>Fill in your email to reset your password</div>
+        <hr/>
+        <form action="/reset" method=post>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="text" name="email" class="form-control" required>
+            </div>
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-primary">Reset</button>
+            </div>
+        </form>
+    </article>
+</main>
+<%- await include('views/partials/footer.ejs') %>
+</body>
+</html>
