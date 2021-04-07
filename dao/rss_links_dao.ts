@@ -5,7 +5,7 @@ export class RssLinkDao {
   constructor(private db: DB) {
     // contains the links that has been validated to be rss links
     this.db.query(
-      "CREATE TABLE IF NOT EXISTS rss_links (id INTEGER PRIMARY KEY AUTOINCREMENT, website TEXT UNIQUE, rss_link TEXT UNIQUE, timestamp INTEGER, hidden BOOLEAN DEFAULT false)",
+      "CREATE TABLE IF NOT EXISTS rss_links (id INTEGER PRIMARY KEY AUTOINCREMENT, website TEXT UNIQUE, rss_link TEXT UNIQUE, timestamp INTEGER, hidden INTEGER DEFAULT 0)",
     );
   }
 
@@ -42,7 +42,7 @@ export class RssLinkDao {
 
   public hidePost(id:number) {
     try {
-      this.db.query("UPDATE rss_links SET hidden = true where id = ?", [id])
+      this.db.query("UPDATE rss_links SET hidden = 1 where id = ?", [id])
     } catch(e: unknown) {
       return {kind: "fail", message: (e as Error).message}
     }
@@ -50,7 +50,7 @@ export class RssLinkDao {
 
   public showPost(id:number) {
     try {
-      this.db.query("UPDATE rss_links SET hidden = false where id = ?", [id])
+      this.db.query("UPDATE rss_links SET hidden = 0 where id = ?", [id])
     } catch(e: unknown) {
       return {kind: "fail", message: (e as Error).message}
     }

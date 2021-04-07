@@ -12,13 +12,13 @@ export const postVoteHandler = async (ctx: RouterContext) => {
 
     let postId = response.id
     let voteValue = response.value
-    let votersIP = ctx.request.ip as string
+    let votersEmail = ctx.state.currentUser.email
     let currentVoteByVoter = 0
 
 
     // learn more about destructing assignment and refactor
 // CREATE TABLE IF NOT EXISTS votes (post_id INTEGER, votes INTEGER, voters_ip TEXT, UNIQUE(post_id, voters_ip) ON CONFLICT REPLACE
-    const result = voteDao.getVoteInfo(postId, votersIP)
+    const result = voteDao.getVoteInfo(postId, votersEmail)
 
     switch(result.kind) {
         case("success"): {
@@ -31,8 +31,8 @@ export const postVoteHandler = async (ctx: RouterContext) => {
             }
             
             if (isVoteValid(voteValue, currentVoteByVoter)) {
-                const updated = await voteDao.updateVoteInfo(postId, votersIP, voteValue)!.value!
-                ctx.response.body = {postId, voteValue: updated, votersIP}
+                const updated = await voteDao.updateVoteInfo(postId, votersEmail, voteValue)!.value!
+                ctx.response.body = {postId, voteValue: updated, votersEmail}
                 return
             } else {
                 ctx.response.status = 400

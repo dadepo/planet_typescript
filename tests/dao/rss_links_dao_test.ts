@@ -55,15 +55,17 @@ Deno.test({
         await sut.saveSubmittedLink("https://www.example1.com", "https://www.example1.com/rss.xml")
         await sut.saveSubmittedLink("https://www.example2.com", "https://www.example2.com/rss.xml")
 
-        let results = [...(sut.getAllActiveRSSLinks() as Success<any>).value]
-        assertEquals(results.length, 0)
-
-        await sut.showPost(1)
-        results = [...(sut.getAllActiveRSSLinks() as Success<any>).value]
-        assertEquals(results.length, 1)
+         let results = [...(sut.getAllActiveRSSLinks() as Success<any>).value]
+         assertEquals(results.length, 3)
 
         await sut.hidePost(1)
         results = [...(sut.getAllActiveRSSLinks() as Success<any>).value]
-        assertEquals(results.length, 0)
+        assertEquals(results.length, 2)
+
+        await sut.showPost(1)
+        results = [...(sut.getAllActiveRSSLinks() as Success<any>).value]
+        assertEquals(results.length, 3)
+
+
     }
 } as any)

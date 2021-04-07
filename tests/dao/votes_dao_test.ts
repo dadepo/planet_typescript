@@ -6,19 +6,19 @@ Deno.test({
         only: false,
         async fn(){
             const sut = new VoteDao(new DB(":memory:"))
-            sut.updateVoteInfo(1,"127.0.0.1", 1) // either vote up
-            sut.updateVoteInfo(1,"127.0.0.1", 0) // or when you vote again vote down
+            sut.updateVoteInfo(1,"test@example.com", 1) // either vote up
+            sut.updateVoteInfo(1,"test@example.com", 0) // or when you vote again vote down
 
-            const result = sut.getVoteInfo(1, "127.0.0.1")
+            const result = sut.getVoteInfo(1, "test@example.com")
             switch(result.kind) {
                 case ("fail"): {
                     throw new Error(result.message);
                 }
                 case ("success"): {
-                    for (const [id, votes, votersIP] of result.value!) {
+                    for (const [id, votes, votersEmail] of result.value!) {
                         assertEquals(id, 1);
                         assertEquals(votes, 0);
-                        assertEquals(votersIP, "127.0.0.1");
+                        assertEquals(votersEmail, "test@example.com");
                     }
                     break
                 }

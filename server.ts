@@ -4,7 +4,6 @@ import { indexHandler } from "./handlers/home.ts";
 import { postVoteHandler } from "./handlers/voting.ts";
 import {hideLinksPostHandler, hidePostHandler, linksGetHandler, pendingGetHandler} from "./handlers/admin.ts";
 
-import { isIPAllowed } from "./middleware/ip_check.ts"
 import {recentHandler} from "./handlers/recent.ts";
 import {
     loginIndexGetHandler,
@@ -25,11 +24,11 @@ router.get("/index", isAuthed, indexHandler)
 router.get("/recent", recentHandler)
 
 router.get("/submit", submitHandler)
-router.get("/admin/pending/:page", isIPAllowed, pendingGetHandler)
-router.get("/admin/links", isIPAllowed, linksGetHandler)
+router.get("/admin/pending/:page", pendingGetHandler)
+router.get("/admin/links", linksGetHandler)
 
-router.post("/admin/links/visibility", isIPAllowed, hideLinksPostHandler)
-router.post("/admin/pending/visibility", isIPAllowed, hidePostHandler)
+router.post("/admin/links/visibility", hideLinksPostHandler)
+router.post("/admin/pending/visibility", hidePostHandler)
 
 router.post("/vote", hasCurrentUser, postVoteHandler)
 router.post("/submit", submitHandlerProcessor)
