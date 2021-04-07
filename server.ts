@@ -14,7 +14,7 @@ import {
 } from "./handlers/auth.ts";
 import {isAuthed} from "./middleware/auth_check.ts";
 import {hasCurrentUser} from "./middleware/has_currentuser_check.ts";
-
+import {isAdmin} from "./middleware/admin_user_check.ts";
 
 const app = new Application()
 const router = new Router();
@@ -24,11 +24,11 @@ router.get("/index", isAuthed, indexHandler)
 router.get("/recent", recentHandler)
 
 router.get("/submit", submitHandler)
-router.get("/admin/pending/:page", pendingGetHandler)
-router.get("/admin/links", linksGetHandler)
 
-router.post("/admin/links/visibility", hideLinksPostHandler)
-router.post("/admin/pending/visibility", hidePostHandler)
+router.get("/admin/pending/:page", isAdmin, pendingGetHandler)
+router.get("/admin/links", isAdmin, linksGetHandler)
+router.post("/admin/links/visibility", isAdmin, hideLinksPostHandler)
+router.post("/admin/pending/visibility", isAdmin, hidePostHandler)
 
 router.post("/vote", hasCurrentUser, postVoteHandler)
 router.post("/submit", submitHandlerProcessor)
