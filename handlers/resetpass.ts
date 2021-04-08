@@ -49,7 +49,7 @@ export const sendResetLinkPostHandler = async (ctx: RouterContext) => {
                 case "success": {
                     mailer(email, `
                     This is your password reset link. It expires in 1 hr
-                    http://localhost:4300/reset/${reset}
+                    ${config()["RESET_LINK"]}/${reset}
                     `)
                     break
                 }
