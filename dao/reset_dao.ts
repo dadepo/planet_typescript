@@ -7,6 +7,24 @@ export class ResetDao {
         );
     }
 
+    deleteResetLink(email:string) {
+        try {
+
+            this.db.query("DELETE FROM reset WHERE email = (?)", [email])
+
+            // delete stuff older than 1 hour
+            const oldest = Date.now() - 3600000
+            this.db.query("DELETE FROM reset WHERE timestamp < (?)", [oldest])
+            return {
+                kind: "success",
+                value: true
+            }
+
+        } catch (e) {
+            return { kind:"fail", message: (e as Error).message };
+        }
+    }
+
     addResetLink(email:string, bareLink:string, resetLink: string) {
         try {
             return {

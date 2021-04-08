@@ -66,7 +66,9 @@ export const sendResetLinkPostHandler = async (ctx: RouterContext) => {
             break
         }
     }
-    ctx.response.body = "If an account exist with the email, a reset link has been sent"
+    ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/message.ejs`, {
+        message: `If an account exist with the email, a reset link has been sent.`
+    })
 }
 
 export const renderPageGetHandler = async (ctx: RouterContext) => {
@@ -105,11 +107,10 @@ export const updatePasswordPostHandler = async (ctx: RouterContext) => {
     let email = req.get("email")
     let newPassword = await bcrypt.hash(req.get("new_password"))
 
-    console.log(111, email, newPassword)
-
     const result = userDao.updatePassword(email, newPassword);
     switch(result.kind) {
         case ("success"): {
+            resetDao.deleteResetLink(email)
             ctx.response.redirect("../../")
             break
         }
