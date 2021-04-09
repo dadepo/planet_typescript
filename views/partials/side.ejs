@@ -1,3 +1,13 @@
+<div class="card">
+    <div id="user_detail">
+        <% if (currentUser) { %>
+            <span><%= currentUser.display_name %> | <a class="no_underline_link" href="/logout">Logout</a></span>
+        <% } else { %>
+            <span><a class="no_underline_link" href="/login">Login</a></span>
+        <% } %>
+    </div>
+</div>
+
 <div class="card card1">
     <p>Write a Typescript focused blog? Submit below:</p>
     <form action="/submit" method="POST">

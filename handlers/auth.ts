@@ -31,7 +31,7 @@ export const loginPostHandler = async (ctx: RouterContext) => {
                 )
 
                 ctx.cookies.set('jwt', jwt)
-                ctx.response.redirect("/")
+                ctx.response.redirect(REDIRECT_BACK, "/")
             } else {
                 ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/login.ejs`, {
                     error: "Not found"
@@ -62,8 +62,7 @@ export const registerPostHandler = async (ctx: RouterContext) => {
     const result = userDao.addUser(displayName, email, password, "inbuilt")
     switch (result.kind) {
         case "success": {
-            console.log("should redirect")
-            ctx.response.redirect("/login")
+            ctx.response.redirect(REDIRECT_BACK, "/login")
             break;
         }
         case "fail": {

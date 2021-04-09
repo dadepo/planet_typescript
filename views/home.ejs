@@ -7,7 +7,6 @@
     <body>
         <header>
             <div id="title"><a href="./" class="no_underline_link">PlanetTypescript</a></div>
-            <%- await include('views/partials/user_details.ejs', {currentUser}) %>
         </header>
         <main>
         <article>
@@ -17,7 +16,7 @@
             <%- await include('views/partials/posts.ejs', {links, page}) %>
         </article>
         <aside>
-            <%- await include('views/partials/side.ejs') %>
+            <%- await include('views/partials/side.ejs', {currentUser}) %>
         </aside>
         </main>
         <%- await include('views/partials/footer.ejs') %>
