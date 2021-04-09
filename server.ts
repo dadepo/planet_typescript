@@ -1,5 +1,5 @@
 import {Application, oakCors, Router, RouterContext, send} from "./deps.ts"
-import { submitHandler, submitHandlerProcessor} from "./handlers/handlers.ts";
+import { submitHandler, submitHandlerProcessor} from "./handlers/submit.ts";
 import { indexHandler } from "./handlers/home.ts";
 import { postVoteHandler } from "./handlers/voting.ts";
 import {hideLinksPostHandler, hidePostHandler, linksGetHandler, pendingGetHandler} from "./handlers/admin.ts";

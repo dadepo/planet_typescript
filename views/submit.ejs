@@ -1,13 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head></head>
+<html>
+<head>
+    <link rel="stylesheet" href="./style/home.css">
+    <title>Submit Blog</title>
+</head>
+<body>
+<header>
+    <div id="title"><a href="./" class="no_underline_link">PlanetTypescript</a></div>
+</header>
+<main>
+    <article>
+        <div>Submit a Typescript centric blog</div>
+        <hr/>
+        <form action="/submit" method="POST">
+            <input type="url" placeholder="submit link to rss feed" name="link"/>
+            <input type="submit" title="Submit link">
+        </form>
+    </article>
+    <aside>
 
-    <body>
-Submit RSS Link
-
-<form action="/submit" method="POST">
-    <input type="url" placeholder="submit link to rss feed" name="link"/>
-    <input type="submit" title="Submit link">
-</form>
+    </aside>
+</main>
+<%- await include('views/partials/footer.ejs') %>
 </body>
 </html>

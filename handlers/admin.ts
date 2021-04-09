@@ -63,6 +63,7 @@ export const linksGetHandler = async (ctx: RouterContext) => {
             const values = results.value?.asObjects()
             if (values) {
                 const links = [...values]
+                console.log(links)
                 ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/admin/links.ejs`, {
                     links:links
                 })
