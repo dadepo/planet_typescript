@@ -1,4 +1,4 @@
-import { deserializeFeed } from '../deps.ts';
+import {deserializeFeed, REDIRECT_BACK, renderFileToString} from '../deps.ts';
 import { DOMParser } from "../deps.ts";
 
 import { db } from "../dao/db_connection.ts"
@@ -23,17 +23,17 @@ const processLink = async (link: string) => {
         const doc = new DOMParser().parseFromString(contentOfLink, "text/html")!;
         let rssLink = doc.querySelector("link[type='application/rss+xml']")?.getAttribute("href") as string
         rssLink = rssLink ?? doc.querySelector("link[type='application/atom+xml']")?.getAttribute("href") as string
-        if (!rssLink.includes("http")) {
-            rssLink = `${link}/${rssLink}`
-        }
         if (rssLink) {
+            if (!rssLink.includes("http")) {
+                console.log(911, rssLink, link)
+                rssLink = `${link}/${rssLink}`
+            }
             await rssLinkDao.saveSubmittedLink(new URL(link).origin, rssLink)
         } else {
             console.log("Cant retrieve rss")
         }
     } else {
-        let website:any = await deserializeFeed(contentOfLink, { outputJsonFeed: true });
-        await rssLinkDao.saveSubmittedLink(new URL(website.feed.home_page_url!).origin, link)
+        await rssLinkDao.saveSubmittedLink(new URL(link).origin, link)
     }
 }
 

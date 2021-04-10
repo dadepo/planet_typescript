@@ -32,18 +32,25 @@ export const submitHandlerProcessor = async (ctx: RouterContext) => {
                     checker.postMessage({link: submit})
                 }
                 ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/message.ejs`, {
-                    message: `Link submitted.`
-                })
+                    message: `Thanks for the submission. 
+                    If the link contains a valid RSS feed, planettypescript would start polling
+                `})
                 break
             }
             case ("fail"):
-                ctx.response.status = 501
-                ctx.response.body = result.message
+                console.log("error", result.message!)
+                ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/message.ejs`, {
+                    message: `Thanks for the submission. 
+                    If the link contains a valid RSS feed, planettypescript would start polling
+                `})
                 break;
         }
 
     } else {
-        ctx.response.status = 403
-        ctx.response.body = "Something went wrong"
+        console.log("error")
+        ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/message.ejs`, {
+            message: `Thanks for the submission. 
+                    If the link contains a valid RSS feed, planettypescript would start polling
+                `})
     }
 }
