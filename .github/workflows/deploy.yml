@@ -25,4 +25,4 @@ jobs:
           SSH_HOST: ${{ secrets.SSH_HOST }}
 
       - name: run script
-        run: ssh -v staging 'cd /etc/nginx/planetts/ && ./deploy.sh'
+        run: ssh staging 'cd /etc/nginx/planetts/ && ./deploy.sh'
