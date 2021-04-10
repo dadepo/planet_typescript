@@ -21,8 +21,8 @@ jobs:
           END
         env:
           SSH_USER: "ec2-user"
-          SSH_KEY: ${{ secrets.PK1 }}
-          SSH_HOST: "ec2-54-160-69-3.compute-1.amazonaws.com"
+          SSH_KEY: ${{ secrets.EC2_PUB_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
 
       - name: run script
-        run: ssh -vv staging 'cd /tmp && ./hello.sh'
+        run: ssh -vv staging 'cd /tmp && touch hello.sh'
