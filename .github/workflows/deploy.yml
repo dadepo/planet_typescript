@@ -21,7 +21,7 @@ jobs:
           END
         env:
           SSH_USER: "ec2-user"
-          SSH_KEY: ${{ secrets.EC2_PUB_KEY }}
+          SSH_KEY: ${{ secrets.EC2_PRIV_KEY }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
 
       - name: run script
