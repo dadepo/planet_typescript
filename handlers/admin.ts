@@ -21,7 +21,7 @@ export const hidePostHandler = async (ctx: RouterContext) => {
     }    
 }
 
-export const pendingGetHandler = async (ctx: RouterContext) => {
+export const relevantpostGetHandler = async (ctx: RouterContext) => {
     let offset = 0;
     const count = 30;
 
@@ -38,7 +38,7 @@ export const pendingGetHandler = async (ctx: RouterContext) => {
             if (values) {
                 const links = [...values]
                 
-                ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/pending_submissions.ejs`, {
+                ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/admin/posts_submissions.ejs`, {
                     links:links
                 })
             } else {
