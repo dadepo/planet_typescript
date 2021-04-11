@@ -25,4 +25,6 @@ jobs:
           SSH_HOST: ${{ secrets.SSH_HOST }}
 
       - name: run script
-        run: ssh staging 'cd /etc/nginx/planetts/ && ./deploy.sh'
+        run: |
+         scp -o StrictHostKeyChecking=no -r ./bin/deploy.sh ${SSH_USER}@${SSH_HOST}:/etc/nginx/planetts/
+         ssh staging 'cd /etc/nginx/planetts/ && ./deploy.sh'
