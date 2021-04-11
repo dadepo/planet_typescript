@@ -22,8 +22,7 @@ ENV DENO_DIR /deno-dir/
 
 WORKDIR /tmp/build
 COPY . .
-RUN deno bundle --unstable server.ts /usr/bin/bundle.js
-RUN mv env.prod .env
+RUN mv env.prod .env && deno bundle --unstable server.ts /usr/bin/bundle.js
 RUN rm -rf /tmp/build/tsfeed.db
 
 
