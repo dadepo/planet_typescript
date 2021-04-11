@@ -23,8 +23,8 @@ ENV DENO_DIR /deno-dir/
 WORKDIR /tmp/build
 COPY . .
 RUN deno bundle --unstable server.ts /usr/bin/bundle.js
-RUN rm -rf /tmp/build/tsfeed.db
 RUN mv env.prod .env
+RUN rm -rf /tmp/build/tsfeed.db
 
 
 EXPOSE 4300/tcp
