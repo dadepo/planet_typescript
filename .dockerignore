@@ -1,1 +1,11 @@
 tsfeed.db
+.DS_Store
+.env
+.github
+.vscode
+.dockerignore
+.idea
+.git
+Dockerfile
+TODO.txt
+log.txt

@@ -18,14 +18,18 @@ RUN apt-get -qq update \
  && apt-get -qq clean \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+RUN apt-get -qq update \
+  && apt-get -qq install -y sqlite3 libsqlite3-dev
+
 ENV DENO_DIR /deno-dir/
 
-WORKDIR /usr/local/data/planetts
+WORKDIR /usr/local/planetts/bin
 COPY . .
-RUN deno bundle --unstable server.ts /usr/bin/bundle.js
-
+RUN mv env.prod .env
+RUN deno bundle --unstable server.ts /usr/local/planetts/bin/bundle.js
+VOLUME ["/usr/local/planetts/data/"]
 
 EXPOSE 4300/tcp
 
 ENTRYPOINT ["deno"]
-CMD ["run", "--allow-net", "--allow-read", "--allow-write", "--allow-env", "--unstable", "/usr/bin/bundle.js"]
+CMD ["run", "--allow-net", "--allow-read", "--allow-write", "--allow-env", "--unstable", "/usr/local/planetts/bin/bundle.js"]
