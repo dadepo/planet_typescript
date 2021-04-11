@@ -26,8 +26,8 @@ jobs:
 
       - name: run script
         run: |
-         sudo scp -o StrictHostKeyChecking=no -r ./bin/deploy.sh ${SSH_USER}@ec2-54-148-28-57.us-west-2.compute.amazonaws.com://etc/nginx/planetts/
-         sudo ssh staging 'cd /etc/nginx/planetts/ && ./deploy.sh'
+         scp ./bin/deploy.sh ${SSH_USER}@${SSH_USER}:/etc/nginx/planetts/
+         ssh staging 'cd /etc/nginx/planetts/ && ./deploy.sh'
         env:
           SSH_USER: "ec2-user"
           SSH_KEY: ${{ secrets.EC2_PRIV_KEY }}
