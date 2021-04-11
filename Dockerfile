@@ -20,7 +20,7 @@ RUN apt-get -qq update \
 
 ENV DENO_DIR /deno-dir/
 
-WORKDIR /tmp/build
+WORKDIR /usr/local/data/planetts
 COPY . .
 RUN mv env.prod .env && deno bundle --unstable server.ts /usr/bin/bundle.js
 RUN rm -rf /tmp/build/tsfeed.db
