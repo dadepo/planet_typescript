@@ -26,8 +26,8 @@ jobs:
 
       - name: run script
         run: |
-         scp -o StrictHostKeyChecking=no -r ./bin/deploy.sh ${SSH_USER}@${SSH_HOST}:/etc/nginx/planetts/
-         ssh staging 'cd /etc/nginx/planetts/ && ./deploy.sh'
+         sudo scp -o StrictHostKeyChecking=no -r ./bin/deploy.sh ${SSH_USER}@${SSH_HOST}:/etc/nginx/planetts/
+         sudo ssh staging 'cd /etc/nginx/planetts/ && ./deploy.sh'
         env:
           SSH_USER: "ec2-user"
           SSH_KEY: ${{ secrets.EC2_PRIV_KEY }}
