@@ -22,8 +22,7 @@ ENV DENO_DIR /deno-dir/
 
 WORKDIR /usr/local/data/planetts
 COPY . .
-RUN mv env.prod .env && deno bundle --unstable server.ts /usr/bin/bundle.js
-RUN rm -rf /tmp/build/tsfeed.db
+RUN deno bundle --unstable server.ts /usr/bin/bundle.js
 
 
 EXPOSE 4300/tcp
