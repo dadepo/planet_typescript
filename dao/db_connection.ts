@@ -1,3 +1,3 @@
-import { DB } from "../deps.ts"
+import {config, DB} from "../deps.ts"
 
-export const db = new DB("tsfeed.db");
+export const db = new DB(config()["DB_FILE"]);
