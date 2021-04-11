@@ -24,7 +24,7 @@ WORKDIR /tmp/build
 COPY . .
 RUN deno bundle --unstable server.ts /usr/bin/bundle.js
 RUN rm -rf /tmp/build/tsfeed.db
-COPY env.prod .env
+RUN mv env.prod .env
 
 
 EXPOSE 4300/tcp
