@@ -41,7 +41,7 @@ echo "New port will be $NEW_PORT"
 
 echo "starting the new container at $NEW_PORT"
 cat /etc/nginx/planetts/pass.txt | sudo docker login ghcr.io -u dadepo --password-stdin
-sudo docker run --rm -d -v /usr/data:/usr/data -p $NEW_PORT:4300 ghcr.io/dadepo/planet-typescript:latest
+sudo docker pull ghcr.io/dadepo/planet-typescript:latest && sudo docker run --rm -d -v /usr/local/data/planetts/:/usr/local/data/planetts/ -p $NEW_PORT:4300 ghcr.io/dadepo/planet-typescript:latest
 
 echo "copying the new nginx configuration in place"
 sudo cp "/etc/nginx/planetts/$NEW_PORT.conf" /etc/nginx/nginx.conf
