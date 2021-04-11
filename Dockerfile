@@ -24,7 +24,7 @@ WORKDIR /tmp/build
 COPY . .
 RUN deno bundle --unstable server.ts /usr/bin/bundle.js
 
-WORKDIR /tmp/data
+WORKDIR /usr/data
 
 EXPOSE 4300/tcp
 
