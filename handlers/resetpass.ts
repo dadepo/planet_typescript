@@ -73,7 +73,7 @@ export const sendResetLinkPostHandler = async (ctx: RouterContext) => {
 
 export const renderPageGetHandler = async (ctx: RouterContext) => {
     const resetLink = ctx.params.link!;
-    const result = resetDao.getByLink(resetLink)
+    const result = resetDao.getByResetLink(resetLink)
     switch (result.kind) {
         case("success"): {
             const entry = [...result.value!.asObjects()!][0]

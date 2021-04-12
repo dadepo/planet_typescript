@@ -40,7 +40,7 @@ export class ResetDao {
 
     }
 
-    getByLink(resetLink: string) {
+    getByResetLink(resetLink: string) {
         try {
             return {
                 kind:"success",
