@@ -27,7 +27,6 @@ WORKDIR /usr/local/planetts/bin
 COPY . .
 RUN mv env.prod .env
 RUN deno bundle --unstable server.ts /usr/local/planetts/bin/bundle.js
-VOLUME ["/usr/local/planetts/data/"]
 
 EXPOSE 4300/tcp
 
