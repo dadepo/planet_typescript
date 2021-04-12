@@ -24,7 +24,7 @@ const mailer = async (receipient: string, message: string) => {
     await client.send({
         from: config()["RESET_SENDER_UNAME"],
         to: receipient,
-        subject: "Testing Deno SMTP client",
+        subject: "Your password reset link",
         content: message,
     });
 
