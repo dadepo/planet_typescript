@@ -14,3 +14,5 @@
 - If you create a new reset link, replace
 - Add relevant HTML title
 - Add logging
+OPS
+- copy /bin/deploy.sh to server
