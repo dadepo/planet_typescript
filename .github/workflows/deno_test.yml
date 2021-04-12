@@ -11,7 +11,7 @@ on:
  workflow_dispatch:
 jobs:
   test:
-    runs-on: ${{ matrix.os }} # runs a test on Ubuntu, Windows and macOS
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
