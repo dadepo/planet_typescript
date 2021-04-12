@@ -26,6 +26,7 @@ ENV DENO_DIR /deno-dir/
 WORKDIR /usr/local/planetts/bin
 COPY . .
 RUN mv env.prod .env
+RUN mkdir /usr/local/planetts/data/
 RUN deno bundle --unstable server.ts /usr/local/planetts/bin/bundle.js
 
 EXPOSE 4300/tcp
