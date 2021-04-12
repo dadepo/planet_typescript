@@ -1,6 +1,6 @@
 name: publish
 
-on: [push]
+on: [workflow_dispatch]
 
 jobs:
   publish-pts-image:
