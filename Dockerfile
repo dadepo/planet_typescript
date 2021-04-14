@@ -3,7 +3,7 @@ FROM debian:buster-slim
 LABEL org.opencontainers.image.source="https://github.com/dadepo/tsfeed"
 
 
-ENV DENO_VERSION=1.8.2
+ENV DENO_VERSION=1.9.0
 
 RUN apt-get -qq update \
  && apt-get -qq install -y --no-install-recommends curl ca-certificates unzip \
