@@ -25,7 +25,6 @@ const processLink = async (link: string) => {
         rssLink = rssLink ?? doc.querySelector("link[type='application/atom+xml']")?.getAttribute("href") as string
         if (rssLink) {
             if (!rssLink.includes("http")) {
-                console.log(911, rssLink, link)
                 rssLink = `${link}/${rssLink}`
             }
             await rssLinkDao.saveSubmittedLink(new URL(link).origin, rssLink)

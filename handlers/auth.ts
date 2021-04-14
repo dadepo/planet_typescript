@@ -57,7 +57,6 @@ export const registerPostHandler = async (ctx: RouterContext) => {
     let email = req.get("email")
     let password = await bcrypt.hash(req.get("password"))
 
-    console.log("register", email, req.get("password"), password)
 
     const result = userDao.addUser(displayName, email, password, "inbuilt")
     switch (result.kind) {

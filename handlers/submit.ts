@@ -47,7 +47,6 @@ export const submitHandlerProcessor = async (ctx: RouterContext) => {
         }
 
     } else {
-        console.log("error")
         ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/message.ejs`, {
             message: `Thanks for the submission. 
                     If the link contains a valid RSS feed, planettypescript would start polling

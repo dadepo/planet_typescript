@@ -14,8 +14,6 @@ const rssLinkDao = new RssLinkDao(db)
 
 const domParser = new DOMParser()
 
-console.log("I am a worker!")
-
 
 async function wait(ms: number) {
     return new Promise(resolve => {
@@ -87,10 +85,10 @@ const poll_rss_link = async (website:string, rssLink: string) => {
                     if (result.value === 0) {
                         relevantPostDao.savePost(website, url, title, doc.textContent)
                     } else {
-                        console.log("already saved", url)
+                        // console.log("already saved", url)
                     }
                 } else {
-                    console.log("not relevant", url)
+                    // console.log("not relevant", url)
                 }
                 break;
             }
