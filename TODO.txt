@@ -11,6 +11,8 @@
 - move secret token to env
 - If you create a new reset link, replace
 - Add logging
-- Make logo clickable to home
+- Maybe check if there is more than one mention of typescript
+- Use firebase for auth
+
 OPS
 - copy /bin/deploy.sh to server

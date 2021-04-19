@@ -3,12 +3,12 @@ html, body {
     margin: 0;
 }
 body {
-    background: url("../images/rocket-bg.png") no-repeat center center fixed;
+    /*background: url("../images/rocket-bg.png") no-repeat center center fixed;*/
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-    background-color: #80b3d2;
+    background-color: #fafafa;
     /* font-family: Arial, 'DejaVu Sans', 'Liberation Sans', Freesans, sans-serif; */
     font-family: "helvetica neue", arial, sans-serif;
     display: flex;
@@ -67,6 +67,10 @@ body {
     line-height: 1.1em;
 }
 
+div.more {
+    margin-top: 10px;
+}
+
 nav {
     margin-bottom: 10px;
 }
@@ -122,7 +126,7 @@ main > article {
     width: 55%;
     border-radius: 5px;
     border: 1px solid #ccc;
-    box-shadow: 4px 4px 5px #888888;
+    /*box-shadow: 4px 4px 5px #888888;*/
 }
 
 .form-group {
@@ -150,7 +154,7 @@ main > aside > .card {
     padding:15px;
     margin-bottom: 2px;
     border-radius: 5px;
-    box-shadow: 6px 10px 5px #888888;
+    /*box-shadow: 6px 10px 5px #888888;*/
 }
 
 .card #user_detail {
