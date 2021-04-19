@@ -1,6 +1,6 @@
 
 
-const relevantKeywords = ["deno", "typescript", "oak", "ecmascript", "console"]
+const relevantKeywords = ["deno", "typescript", "oak", "ecmascript"]
 
 const escapeRegex = (input:string) => {
     return input.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&').replace(/[^a-zA-Z ]/g, "");
