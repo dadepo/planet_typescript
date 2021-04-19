@@ -3,7 +3,7 @@
     <script type="text/javascript">
 
         const hide = (id) => {
-            fetch(`http://localhost:4300/admin/links/visibility`, {
+            fetch(`/admin/links/visibility`, {
                 method: "POST",
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({id, action:'hide'})
@@ -11,7 +11,7 @@
         }
 
         const show = (id) => {
-            fetch(`http://localhost:4300/admin/links/visibility`, {
+            fetch(`/admin/links/visibility`, {
                 method: "POST",
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({id, action:'show'})

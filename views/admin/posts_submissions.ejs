@@ -3,7 +3,7 @@
         <script type="text/javascript">
 
         const hide = (id) => {
-            fetch(`http://localhost:4300/admin/pending/visibility`, {
+            fetch(`/admin/pending/visibility`, {
                 method: "POST",
                 headers: {'Content-Type': 'application/json'}, 
                 body: JSON.stringify({id, action:'hide'})
@@ -12,7 +12,7 @@
             
 
         const show = (id) => {
-            fetch(`http://localhost:4300/admin/pending/visibility`, {
+            fetch(`/admin/pending/visibility`, {
                 method: "POST",
                 headers: {'Content-Type': 'application/json'}, 
                 body: JSON.stringify({id, action:'show'})
@@ -36,9 +36,9 @@
                         <td><%= link.id %></td>
                         <td><%= link.source%></td>
                         <% if (link.hidden === 0) { %>
-                            <td><%= "visible" %><%= link.hidden %></td>
+                            <td><%= "visible" %></td>
                         <% } else { %>
-                            <td><%= "hidden" %><%= link.hidden %></td>
+                            <td><%= "hidden" %></td>
                         <% }  %>
                         <td>
                             <button onclick="hide(<%= link.id %>)" id="hide-<%= link.id %>" type="button">Hide</button> | 
