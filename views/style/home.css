@@ -59,7 +59,12 @@ body {
 }
 
 .the_link {
-    padding:8px 0 0 5px;
+    padding:8px 0 5px 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 85%;
+    text-overflow: ellipsis;
+    line-height: 1.1em;
 }
 
 nav {
@@ -182,6 +187,6 @@ div#vote_wrapper {
     font-size: 15.3333px;
     font-weight: 700;
     line-height: 19.3333px;
-    color: rgb(37, 98, 220)
+    color: rgb(37, 98, 220);
 }
 
