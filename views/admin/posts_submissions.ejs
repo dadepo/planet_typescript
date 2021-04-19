@@ -36,9 +36,9 @@
                         <td><%= link.id %></td>
                         <td><%= link.source%></td>
                         <% if (link.hidden === 0) { %>
-                            <td><%= "visible" %></td>
+                            <td><%= "visible" %><%= link.hidden %></td>
                         <% } else { %>
-                            <td><%= "hidden" %></td>
+                            <td><%= "hidden" %><%= link.hidden %></td>
                         <% }  %>
                         <td>
                             <button onclick="hide(<%= link.id %>)" id="hide-<%= link.id %>" type="button">Hide</button> | 
