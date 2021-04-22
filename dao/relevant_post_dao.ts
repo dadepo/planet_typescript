@@ -93,12 +93,4 @@ export class RelevantPostDao {
     }
   }
 
-  public uuid() {
-    this.db.query("alter table relevant_post add uuid TEXT")
-    const ids = this.db.query("SELECT id from relevant_post").asObjects();
-    for (const id of ids) {
-      this.db.query("UPDATE relevant_post SET uuid = (?) where id = (?)", [v4.generate(), id.id])
-    }
-  }
-
 }
