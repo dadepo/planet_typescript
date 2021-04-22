@@ -100,13 +100,12 @@ nav {
 }
 
 header {
-    height: 20px;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     padding-top: 10px;
     padding-left:2.5%;
-    gap: 51%
+    gap: 51%;
 }
 
 header #title {
@@ -171,6 +170,7 @@ main > aside > .card {
 footer {
     height: 30px;
     margin: 10px 0 10px 0;
+    padding-bottom: 20px;
     text-align: center;
     font-size: 11px;
 }
