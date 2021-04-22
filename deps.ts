@@ -12,3 +12,4 @@ export { oakCors } from "https://deno.land/x/cors@v1.2.1/mod.ts";
 export { SmtpClient } from "https://deno.land/x/smtp/mod.ts";
 export { encode } from "https://deno.land/std/encoding/base64.ts";
 export { Sha256 } from "https://deno.land/std@0.50.0/hash/sha256.ts"
+export { v4 } from "https://deno.land/std@0.94.0/uuid/mod.ts"
