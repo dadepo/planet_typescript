@@ -3,7 +3,7 @@ import { submitHandler, submitHandlerProcessor} from "./handlers/submit.ts";
 import { indexHandler } from "./handlers/home.ts";
 import { postVoteHandler } from "./handlers/voting.ts";
 import {hideLinksPostHandler, hidePostHandler, linksGetHandler, relevantpostGetHandler} from "./handlers/admin.ts";
-import { db } from "./dao/db_connection.ts"
+
 import {recentHandler} from "./handlers/recent.ts";
 import {
     loginIndexGetHandler,
@@ -21,7 +21,6 @@ import {
     sendResetLinkPostHandler,
     updatePasswordPostHandler
 } from "./handlers/resetpass.ts";
-import {RssLinkDao} from "./dao/rss_links_dao.ts";
 
 const app = new Application()
 const router = new Router();
@@ -54,7 +53,6 @@ router
     .post("/register", registerPostHandler)
     .post("/updatepassword", updatePasswordPostHandler)
 
-
 router.get("/style/:filename", async (ctx: RouterContext) => {      
     ctx.response.status = 200
     await send(ctx, ctx.params.filename!, {
@@ -69,7 +67,6 @@ router.get("/images/:filename", async (ctx: RouterContext) => {
     })
 });
 
-// router.get("/:website/:link", linkGetHandler)
 
 // Find a better way for a fall through
 // this depends on the location
@@ -86,10 +83,6 @@ app.addEventListener("error", evt => {
 })
 
 app.addEventListener("listen", evt => {
-
-    const rssLinkDao = new RssLinkDao(db);
-    rssLinkDao.uuid();
-
     // on server up, starts polling rss
     new Worker(new URL("workers/poll_rss.ts", import.meta.url).href, {
         type: "module",
