@@ -13,6 +13,7 @@
 - Add logging
 - Maybe check if there is more than one mention of typescript
 - Use firebase for auth
+- SEO
 
 OPS
 - copy /bin/deploy.sh to server

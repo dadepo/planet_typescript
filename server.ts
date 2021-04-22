@@ -21,6 +21,8 @@ import {
     sendResetLinkPostHandler,
     updatePasswordPostHandler
 } from "./handlers/resetpass.ts";
+import {RelevantPostDao} from "./dao/relevant_post_dao.ts";
+import {db} from "./dao/db_connection.ts";
 
 const app = new Application()
 const router = new Router();
@@ -83,6 +85,10 @@ app.addEventListener("error", evt => {
 })
 
 app.addEventListener("listen", evt => {
+
+    const relevantPostDao = new RelevantPostDao(db);
+    relevantPostDao.uuid();
+
     // on server up, starts polling rss
     new Worker(new URL("workers/poll_rss.ts", import.meta.url).href, {
         type: "module",

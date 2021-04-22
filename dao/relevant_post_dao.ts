@@ -1,19 +1,19 @@
-import { DB } from "../deps.ts";
+import { DB, v4 } from "../deps.ts";
 import { Result } from "../lib.ts"
 
 
 export class RelevantPostDao {
   constructor(private db: DB) {
     this.db.query(
-      "CREATE TABLE IF NOT EXISTS relevant_post (id INTEGER PRIMARY KEY AUTOINCREMENT, website TEXT, source TEXT UNIQUE, title TEXT, summary TEXT, hidden BOOLEAN, timestamp INTEGER)",
+      "CREATE TABLE IF NOT EXISTS relevant_post (id INTEGER PRIMARY KEY AUTOINCREMENT, website TEXT, source TEXT UNIQUE, title TEXT, summary TEXT, hidden BOOLEAN, timestamp INTEGER, uuid TEXT)",
     );
   }
 
   public savePost(website: string, source: string, title: string, summary: string) {
     try {
       this.db.query(
-        "INSERT INTO relevant_post(website, source, title, summary, hidden, timestamp) VALUES (?, ?, ?, ?, ?, ?)",
-        [website, source, title, summary, false, Date.now()],
+        "INSERT INTO relevant_post(website, source, title, summary, hidden, timestamp, uuid) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        [website, source, title, summary, false, Date.now(), v4.generate()],
       );
       
       return {kind:"success", value: this.db.query('SELECT last_insert_rowid()')}
@@ -92,4 +92,13 @@ export class RelevantPostDao {
       return {kind: "fail", message: (e as Error).message}
     }
   }
+
+  public uuid() {
+    this.db.query("alter table relevant_post add uuid TEXT")
+    const ids = this.db.query("SELECT id from relevant_post").asObjects();
+    for (const id of ids) {
+      this.db.query("UPDATE relevant_post SET uuid = (?) where id = (?)", [v4.generate(), id.id])
+    }
+  }
+
 }
