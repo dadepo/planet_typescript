@@ -1,5 +1,6 @@
 import { DB } from "../deps.ts";
 import { Result } from "../lib.ts"
+import { v4 } from "https://deno.land/std@0.94.0/uuid/mod.ts";
 
 export class RssLinkDao {
   constructor(private db: DB) {
@@ -53,6 +54,14 @@ export class RssLinkDao {
       this.db.query("UPDATE rss_links SET hidden = 0 where id = ?", [id])
     } catch(e: unknown) {
       return {kind: "fail", message: (e as Error).message}
+    }
+  }
+
+  public uuid() {
+    this.db.query("alter table rss_links add uuid TEXT")
+    const ids = this.db.query("SELECT id from rss_links").asObjects();
+    for (const id of ids) {
+      this.db.query("UPDATE rss_links SET uuid = (?) where id = (?)", [v4.generate(), id.id])
     }
   }
 }
