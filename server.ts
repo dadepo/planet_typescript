@@ -21,6 +21,7 @@ import {
     sendResetLinkPostHandler,
     updatePasswordPostHandler
 } from "./handlers/resetpass.ts";
+import {linkGetHandler} from "./handlers/links.ts";
 
 const app = new Application()
 const router = new Router();
@@ -67,6 +68,8 @@ router.get("/images/:filename", async (ctx: RouterContext) => {
     })
 });
 
+
+router.get("/:website", linkGetHandler)
 
 // Find a better way for a fall through
 // this depends on the location

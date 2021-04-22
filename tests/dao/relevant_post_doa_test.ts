@@ -184,3 +184,22 @@ Deno.test({
     const [[,link2]] = [...result2.value!]
     assertEquals(link2, "http://www.example1.com")
 }} as any)
+
+
+Deno.test({
+    name: "Successful get by uuid",
+    only: false,
+    fn(){
+        const db = new DB(":memory:");
+        new VoteDao(db)
+        const sut = new RelevantPostDao(db)
+        sut.savePost("http://www.example1.com", "http://www.example1.com/rss.xml", "title1", "summary1")
+        let result = sut.getAllVisiblePostsOrderByVotes(0,10)
+        const link = [...result.value!]
+        const uuid = link[0][7]
+        result = sut.getPostByUUID(uuid)
+        const submission = [...result.value!]
+
+        assertEquals(submission[0][1], "http://www.example1.com")
+        assertEquals(submission[0][2], "http://www.example1.com/rss.xml")
+    }} as any)

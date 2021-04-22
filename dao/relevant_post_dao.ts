@@ -64,6 +64,17 @@ export class RelevantPostDao {
     }
   }
 
+  public getPostByUUID(uuid: string) {
+    try {
+      return {
+        kind: "success",
+        value: this.db.query("SELECT * from relevant_post where uuid = ?", [uuid])
+      }
+    } catch (e) {
+      return {kind: "fail", message: (e as Error).message}
+    }
+  }
+
   public hidePost(id:number) {
     try {
       this.db.query("UPDATE relevant_post SET hidden = true where id = ?", [id])

@@ -87,10 +87,13 @@ nav {
 .time_retrieved {
     font-family: "helvetica neue", arial, sans-serif;
     font-size: 11px;
-    color: #666;
     margin: 0 5px;
 }
 
+.the_link span {
+    font-size: 11px;
+    color: #666;
+}
 
 .no_underline_link {
     text-decoration: none;

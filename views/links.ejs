@@ -1,0 +1,27 @@
+<html>
+<head>
+<!--    TODO why ../ -->
+    <link rel="stylesheet" href="../style/home.css">
+    <%- await include('views/partials/ga.ejs') %>
+    <%- await include('views/partials/voter.ejs') %>
+    <title>Home</title>
+</head>
+<body>
+<%- await include('views/partials/header.ejs') %>
+<main>
+    <article>
+        <nav>
+            <%- await include('views/partials/nav.ejs') %>
+        </nav>
+        <%- await include('views/partials/single_post.ejs', {links}) %>
+    </article>
+    <aside>
+        <%- await include('views/partials/side.ejs', {currentUser}) %>
+    </aside>
+</main>
+<%- await include('views/partials/footer.ejs') %>
+</body>
+</html>
+
+
+

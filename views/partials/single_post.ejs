@@ -1,0 +1,40 @@
+<% if (links.length > 0) { %>
+
+    <% for(var i=0; i < links.length; i++) { %>
+        <div class="link_wrapper">
+            <div class="vote_wrapper" onclick="voteUp('<%= links[i].id %>')">
+                <div class="arrow-up"></div>
+                <div class="vote" id="vote-<%= links[i].id %>"><%= links[i].votes %></div>
+            </div>
+
+            <div class="the_link">
+                <a class="go_link" href="<%= links[i].source %>" title="<%= links[i].title %>"><%- links[i].title %></a>
+                <br/>
+                <span class="website"><a class="no_underline_link" href="<%= links[i].website %>"><%= links[i].website %></a></span>
+                <span class="time_retrieved">retrieved: <%= links[i].timestamp %></span>
+            </div>
+        </div>
+
+        <div id="disqus_thread"></div>
+        <script>
+            var disqus_config = function () {
+                console.log("<%= links[i].discussurl %>")
+                console.log("<%= links[i].uuid %>")
+                this.page.url = "<%= links[i].discussurl %>";  // Replace PAGE_URL with your page's canonical URL variable
+                this.page.identifier = "<%= links[i].uuid %>"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+            };
+
+            (function() { // DON'T EDIT BELOW THIS LINE
+                var d = document, s = d.createElement('script');
+                s.src = 'https://planet-typescript.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+    <% } %>
+<% } else {%>
+    Post not found
+<% } %>
