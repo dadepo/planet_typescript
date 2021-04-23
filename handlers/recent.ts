@@ -1,5 +1,5 @@
 import { RelevantPostDao } from "../dao/relevant_post_dao.ts"
-import {RouterContext}  from "../deps.ts";
+import {config, RouterContext} from "../deps.ts";
 
 import { db } from "../dao/db_connection.ts"
 import {renderFileToString} from "../deps.ts"
@@ -9,6 +9,8 @@ const relevantPostDao = new RelevantPostDao(db)
 
 
 export const recentHandler = async (ctx: RouterContext) => {
+    const origin = new URL(config()["RESET_LINK"]).origin
+
     let page = parseInt(ctx.request.url.searchParams.get("page")  ?? "0")
 
     if (page === 1) {
@@ -30,6 +32,7 @@ export const recentHandler = async (ctx: RouterContext) => {
                         link.votes = link.votes ? link.votes : 0
                         link.timestamp = getAgo(link.timestamp, Date.now())
                         link.website = new URL(link.website).origin
+                        link.discussurl = `${origin}/${new URL(link.website).hostname}/?itemid=${link.uuid}`
                         return Object.assign(link, {
                             summary: link.summary.split(" ").splice(0, 30).join(" ") ?? ""
                         });
