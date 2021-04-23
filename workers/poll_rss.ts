@@ -88,7 +88,7 @@ const poll_rss_link = async (website:string, rssLink: string) => {
                         if (result.value === 0) {
                             let uuid = relevantPostDao.savePost(website, url, title, doc.textContent).value!
 
-                            postTweet({title, url, uuid})
+                            // postTweet({title, url, uuid})
 
                         } else {
                             // console.log("already saved", url)
