@@ -30,6 +30,7 @@ if (config()["ENV"] === "prod") {
 const origin = new URL(config()["RESET_LINK"]).origin
 
 export const postTweet = (input: {title: string, url: string, uuid: string}) => {
+    console.log("In env:" + config()["ENV"])
 
     let discussUrl = `${origin}/${new URL(input.url).hostname}/?itemid=${input.uuid}`
 
