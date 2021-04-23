@@ -133,6 +133,7 @@ const poll_rss_link = async (website:string, rssLink: string) => {
                 case ("success"): {
                     if (relevant) {
                         if (result.value === 0) {
+                            console.log("Saving " + url)
                             let uuid = relevantPostDao.savePost(website, url, title, doc.textContent).value!
                             console.log("I got" + uuid)
                             postTweet({title, url, uuid})
