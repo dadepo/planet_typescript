@@ -7,6 +7,7 @@ import { db } from "../dao/db_connection.ts"
 import { Result } from "../lib.ts";
 import {config}  from "../deps.ts";
 import {isRelevant} from "../utils/patterns.ts";
+import {postTweet} from "../utils/tweeter.ts";
 
 const relevantPostDao = new RelevantPostDao(db)
 const rssLinkDao = new RssLinkDao(db)
@@ -83,7 +84,10 @@ const poll_rss_link = async (website:string, rssLink: string) => {
             case ("success"): {
                 if (relevant) {
                     if (result.value === 0) {
-                        relevantPostDao.savePost(website, url, title, doc.textContent)
+                        let uuid = relevantPostDao.savePost(website, url, title, doc.textContent).value!
+
+                        postTweet({title, url, uuid})
+
                     } else {
                         // console.log("already saved", url)
                     }

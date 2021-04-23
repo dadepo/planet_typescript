@@ -11,12 +11,13 @@ export class RelevantPostDao {
 
   public savePost(website: string, source: string, title: string, summary: string) {
     try {
+      const genUUID = v4.generate()
       this.db.query(
         "INSERT INTO relevant_post(website, source, title, summary, hidden, timestamp, uuid) VALUES (?, ?, ?, ?, ?, ?, ?)",
-        [website, source, title, summary, false, Date.now(), v4.generate()],
+        [website, source, title, summary, false, Date.now(), genUUID],
       );
       
-      return {kind:"success", value: this.db.query('SELECT last_insert_rowid()')}
+      return {kind:"success", value: genUUID}
     } catch (e) {
       return { kind: "fail", message: (e as Error).message }
     }
