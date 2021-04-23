@@ -5,7 +5,7 @@ import {config}  from "../deps.ts";
 let secret = {}
 let client: any = {}
 
-if (config()["CONSUMER_KEY"] === "prod") {
+if (config()["ENV"] === "prod") {
     secret = {
         consumer_key: config()["CONSUMER_KEY"],
         consumer_secret: config()["CONSUMER_SECRET"],
@@ -24,10 +24,18 @@ export const postTweet = (input: {title: string, url: string, uuid: string}) => 
 
     let tweet = `
     ${input.title}
-    Link: ${input.url}
-    Discuss: ${discussUrl}
+    
+   Link: ${input.url}
+   Discuss: ${discussUrl}
     `
-    if (config()["CONSUMER_KEY"] === "prod") {
+    let hashTags = `
+    #typescript #100DaysOfCode #javascript
+    `
+    if ((tweet + hashTags).length <= 280) {
+        tweet = tweet + hashTags;
+    }
+
+    if (config()["ENV"] === "prod") {
         client.post('statuses/update', {status: tweet}, (error: any, tweet: any, response: any) => {
             if (error) throw error;
             console.log(tweet);
