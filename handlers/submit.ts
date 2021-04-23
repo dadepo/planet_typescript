@@ -1,4 +1,4 @@
-import {renderFileToString, RouterContext} from "../deps.ts";
+import {config, renderFileToString, RouterContext} from "../deps.ts";
 import {Result} from "../lib.ts";
 import { PendingSubmissionDao } from "../dao/pending_submission_dao.ts"
 import { db } from "../dao/db_connection.ts"
