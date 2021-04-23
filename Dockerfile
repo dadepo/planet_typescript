@@ -32,4 +32,4 @@ RUN deno bundle --unstable server.ts /usr/local/planetts/bin/bundle.js
 EXPOSE 4300/tcp
 
 ENTRYPOINT ["deno"]
-CMD ["run", "--allow-net", "--allow-read", "--allow-write", "--allow-env", "--unstable", "/usr/local/planetts/bin/bundle.js"]
+CMD ["run", "--allow-net", "--allow-read", "--location", "https://api.twitter.com/1.1/statuses/update.json", "--allow-write", "--allow-env", "--unstable", "/usr/local/planetts/bin/bundle.js"]

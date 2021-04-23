@@ -36,6 +36,7 @@ export const postTweet = (input: {title: string, url: string, uuid: string}) => 
     }
 
     if (config()["ENV"] === "prod") {
+        console.log("In prod, so tweeting")
         client.post('statuses/update', {status: tweet}, (error: any, tweet: any, response: any) => {
             if (error) throw error;
             console.log(tweet);
