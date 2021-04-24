@@ -25,10 +25,11 @@ export const postTweet = (input: {title: string, url: string, uuid: string}) => 
     let tweet = `
     ${input.title}
     
-  Link: ${input.url}
-  Discuss: ${discussUrl}
+Link: ${input.url}
+Discuss: ${discussUrl}
   
     `
+
     let hashTags = ["#typescript", "#javascript", "#100DaysOfCode"]
 
     for (const tag of hashTags) {
