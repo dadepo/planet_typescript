@@ -2,6 +2,7 @@ import {config, renderFileToString, RouterContext} from "../deps.ts";
 import {Result} from "../lib.ts";
 import { PendingSubmissionDao } from "../dao/pending_submission_dao.ts"
 import { db } from "../dao/db_connection.ts"
+import {validURL} from "../utils/url_validator.ts";
 
 const pendingDao = new PendingSubmissionDao(db)
 
@@ -16,6 +17,16 @@ export const submitHandlerProcessor = async (ctx: RouterContext) => {
 
     if (submit) {
         console.log("submitting", submit)
+
+        if(!validURL(submit)) {
+            console.log(submit, "not a valid url")
+            ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/message.ejs`, {
+                message: `Thanks for the submission. 
+                    If the link contains a valid RSS feed, planettypescript would start polling
+                `})
+            return;
+        }
+
         const result: Result<boolean> = pendingDao.submitLink(submit)
         switch(result.kind) {
             case ("success"): {
