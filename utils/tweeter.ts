@@ -27,13 +27,19 @@ export const postTweet = (input: {title: string, url: string, uuid: string}) => 
     
   Link: ${input.url}
   Discuss: ${discussUrl}
+  
     `
-    let hashTags = `
-    #typescript #100DaysOfCode #javascript
-    `
-    if ((tweet + hashTags).length <= 280) {
-        tweet = tweet + hashTags;
+    let hashTags = ["#typescript", "#javascript", "#100DaysOfCode"]
+
+    for (const tag of hashTags) {
+        if ((tweet + tag + " ").length <= 280) {
+            tweet = tweet + tag + " "
+        } else {
+            break;
+        }
     }
+
+    tweet = tweet.trim()
 
     if (config()["ENV"] === "prod") {
         console.log("In prod, so tweeting")
@@ -45,5 +51,4 @@ export const postTweet = (input: {title: string, url: string, uuid: string}) => 
     } else {
         console.log(tweet)
     }
-
 }
