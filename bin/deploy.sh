@@ -54,3 +54,6 @@ stop_container $CURRENT_PORT
 
 echo "set the NEW PORT as CURRENT"
 sudo echo $NEW_PORT > /etc/nginx/planetts/current_port
+
+echo "clean up docker"
+docker system prune -af
