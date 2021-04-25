@@ -28,7 +28,7 @@ export const postTweet = (input: {title: string, url: string, uuid: string}) => 
 Link: ${input.url}
 Discuss: ${discussUrl}
   
-    `
+`
 
     let hashTags = ["#typescript", "#javascript", "#100DaysOfCode"]
 
