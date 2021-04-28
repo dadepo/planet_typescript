@@ -133,6 +133,6 @@ console.log("first polling")
 poll()
 setInterval(() => {
     poll()
-}, 900000);
+}, 3600000);
 }
 
