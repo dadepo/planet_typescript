@@ -15,6 +15,8 @@
 - Use firebase for auth
 - SEO
 - Remove all !
+- Store time of last query, check if rss has time and only query for content if new content
+- Add favicon
 
 OPS
 - copy /bin/deploy.sh to server
