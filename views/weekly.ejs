@@ -1,0 +1,42 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="./style/home.css">
+        <%- await include('views/partials/ga.ejs') %>
+        <%- await include('views/partials/voter.ejs') %>
+        <title>Home</title>
+    </head>
+    <body>
+    <%- await include('views/partials/header.ejs', {origin}) %>
+        <main>
+        <article>
+            <nav>
+                <%- await include('views/partials/nav.ejs') %>
+            </nav>
+
+            <% if (links.length > 0) { %>
+
+
+                <% for(var i=0; i < links.length; i++) { %>
+
+                    <div class="link_wrapper">
+                        <div class="the_link">
+                            <a class="go_link" href="#" title="<%= links[i].title %>"><%- links[i].title %></a>
+                            <br/>
+                        </div>
+                    </div>
+
+                <% } %>
+                <div class="more" ><a class="no_underline_link" href="?page=<%= page %>">More</a></div>
+            <% } else {%>
+                No posts yet
+            <% } %>
+
+
+        </article>
+        <aside>
+            <%- await include('views/partials/side.ejs', {currentUser}) %>
+        </aside>
+        </main>
+        <%- await include('views/partials/footer.ejs') %>
+    </body>
+</html>

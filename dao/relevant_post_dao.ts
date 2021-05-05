@@ -105,4 +105,13 @@ export class RelevantPostDao {
     }
   }
 
+  public getFirstInsertTime(): Result<number> {
+    try {
+      const [timestamps] = this.db.query("SELECT timestamp from relevant_post order by timestamp ASC LIMIT 1")
+      return { kind:"success", value: timestamps[0] }
+    } catch (e) {
+      return {kind: "fail", message: (e as Error).message}
+    }
+  }
+
 }

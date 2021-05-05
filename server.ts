@@ -22,6 +22,7 @@ import {
     updatePasswordPostHandler
 } from "./handlers/resetpass.ts";
 import {linkGetHandler} from "./handlers/links.ts";
+import {getWeekListHandler} from "./handlers/weekly.ts";
 
 const app = new Application()
 const router = new Router();
@@ -44,6 +45,9 @@ router
     .get("/reset", resetGetHandler)
     .get("/reset/:link", renderPageGetHandler)
     .post("/reset", sendResetLinkPostHandler)
+
+// weekly routes
+router.get("/weekly", getWeekListHandler)
 
 //auh routes
 router
