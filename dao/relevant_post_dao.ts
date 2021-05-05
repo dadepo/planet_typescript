@@ -37,6 +37,22 @@ export class RelevantPostDao {
     }
   }
 
+  public getAllVisiblePostsBetweenTimestamp(from: number, till: number) {
+    try {
+      const results = this.db.query(
+          "SELECT * from relevant_post r LEFT JOIN (select post_id, SUM(votes) as votes from votes group by post_id) v ON r.id = v.post_id WHERE r.timestamp >= ? AND r.timestamp <= ? ORDER BY votes DESC",
+          [from, till],
+      );
+
+      return {kind: "success", value: results}
+
+    } catch(e) {
+      return {kind: "fail", message: (e as Error).message}
+    }
+  }
+
+
+
   public getAllVisiblePostsOrderByTime(offset: number, size: number) {
     try {
       const results = this.db.query(
@@ -113,5 +129,6 @@ export class RelevantPostDao {
       return {kind: "fail", message: (e as Error).message}
     }
   }
+
 
 }

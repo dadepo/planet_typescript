@@ -10,23 +10,22 @@
         <main>
         <article>
             <nav>
-                <%- await include('views/partials/nav.ejs') %>
+                <%- await include('views/partials/nav.ejs', {origin}) %>
             </nav>
 
             <% if (links.length > 0) { %>
 
-
                 <% for(var i=0; i < links.length; i++) { %>
-
                     <div class="link_wrapper">
                         <div class="the_link">
-                            <a class="go_link" href="#" title="<%= links[i].title %>"><%- links[i].title %></a>
-                            <br/>
+                            <span><%= links[i].id%></span>
+                            <a class="go_link" href="./weekly/<%= links[i].id %>" title="<%= links[i].title %>"><%- links[i].title %></a>
+                            <span><a class="no_underline_link" href="./weekly/<%= links[i].id %>">View posts</a></span>
                         </div>
                     </div>
 
                 <% } %>
-                <div class="more" ><a class="no_underline_link" href="?page=<%= page %>">More</a></div>
+<!--                <div class="more" ><a class="no_underline_link" href="?page=<%= page %>">More</a></div>-->
             <% } else {%>
                 No posts yet
             <% } %>

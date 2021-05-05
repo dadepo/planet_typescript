@@ -22,7 +22,7 @@ import {
     updatePasswordPostHandler
 } from "./handlers/resetpass.ts";
 import {linkGetHandler} from "./handlers/links.ts";
-import {getWeekListHandler} from "./handlers/weekly.ts";
+import {getAllWeekLinks, getWeekListHandler} from "./handlers/weekly.ts";
 
 const app = new Application()
 const router = new Router();
@@ -41,13 +41,16 @@ router.post("/admin/pending/visibility", isAdmin, hidePostHandler)
 router.post("/vote", hasCurrentUser, postVoteHandler)
 router.post("/submit", submitHandlerProcessor)
 
+// weekly routes
+router
+    .get("/weekly", getWeekListHandler)
+    .get("/weekly/:id", getAllWeekLinks)
+
 router
     .get("/reset", resetGetHandler)
     .get("/reset/:link", renderPageGetHandler)
     .post("/reset", sendResetLinkPostHandler)
 
-// weekly routes
-router.get("/weekly", getWeekListHandler)
 
 //auh routes
 router

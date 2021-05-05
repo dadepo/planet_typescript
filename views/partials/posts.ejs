@@ -1,6 +1,5 @@
 <% if (links.length > 0) { %>
 
-
     <% for(var i=0; i < links.length; i++) { %>
 
         <div class="link_wrapper">
@@ -19,7 +18,9 @@
         </div>
 
     <% } %>
+    <% if (page) { %>
     <div class="more" ><a class="no_underline_link" href="?page=<%= page %>">More</a></div>
+    <% } %>
 <% } else {%>
     No posts yet
 <% } %>

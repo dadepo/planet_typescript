@@ -1,6 +1,6 @@
 <html>
     <head>
-        <link rel="stylesheet" href="./style/home.css">
+        <link rel="stylesheet" href="<%= origin %>/style/home.css">
         <%- await include('views/partials/ga.ejs') %>
         <%- await include('views/partials/voter.ejs') %>
         <title>Home</title>
@@ -10,7 +10,7 @@
         <main>
         <article>
             <nav>
-                <%- await include('views/partials/nav.ejs') %>
+                <%- await include('views/partials/nav.ejs', {origin}) %>
             </nav>
             <%- await include('views/partials/posts.ejs', {links, page}) %>
         </article>
