@@ -11,9 +11,9 @@
 <main>
     <article>
         <nav>
-            <%- await include('views/partials/nav.ejs') %>
+            <%- await include('views/partials/nav.ejs', {origin}) %>
         </nav>
-        <%- await include('views/partials/single_post.ejs', {links}) %>
+        <%- await include('views/partials/single_post.ejs', {origin, links}) %>
     </article>
     <aside>
         <%- await include('views/partials/side.ejs', {currentUser}) %>

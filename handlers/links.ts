@@ -29,6 +29,7 @@ export const linkGetHandler = async (ctx: RouterContext) => {
                             summary: link.summary.split(" ").splice(0, 30).join(" ") ?? ""
                         });
                     }),
+                    origin: origin,
                     currentUser: ctx.state.currentUser
                 })
 
