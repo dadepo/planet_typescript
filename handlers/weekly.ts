@@ -5,7 +5,11 @@ import {getAgo} from "../utils/date_summarizer.ts";
 
 const relevantPostDao = new RelevantPostDao(db)
 
-const firstPostTimestamp = 1617935782478
+/**
+ * Date and time (GMT): Friday, April 16, 2021 11:00:00 AM
+ * Date and time (Your time zone): Friday, April 16, 2021 1:00:00 PM GMT+02:00
+ */
+const firstPostTimestamp = 1618570800000
 
 const getNumberOfWeeks = (now:number, then:number) => {
     return Math.floor(
@@ -61,33 +65,22 @@ export const getAllWeekLinks =  async (ctx: RouterContext) => {
 
 export const getWeekListHandler = async (ctx: RouterContext) => {
     const origin = new URL(config()["RESET_LINK"]).origin
-
-    const result = relevantPostDao.getFirstInsertTime();
     const weeklyLinks = [];
     const weekInMilli = 604800000;
-    switch (result.kind) {
-        case "success": {
-            const genesisDate = result.value;
-            const numberOfWeeks = getNumberOfWeeks(Date.now(), genesisDate);
-            for (let step = 1; step <= numberOfWeeks; step++) {
-                weeklyLinks.push({
-                    id:step,
-                    title: new Date(genesisDate + (step * weekInMilli)).toDateString()
-                })
-            }
-
-            ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/weekly.ejs`, {
-                links: weeklyLinks.reverse(),
-                origin: origin,
-                page: 0,
-                currentUser: null
-            })
-            break
-        }
-        case "fail": {
-            break
-        }
+    const numberOfWeeks = getNumberOfWeeks(Date.now(), firstPostTimestamp);
+    for (let step = 1; step <= numberOfWeeks; step++) {
+        weeklyLinks.push({
+            id:step,
+            title: new Date(firstPostTimestamp + (step * weekInMilli)).toDateString()
+        })
     }
+
+    ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/weekly.ejs`, {
+        links: weeklyLinks.reverse(),
+        origin: origin,
+        page: 0,
+        currentUser: null
+    })
 }
 
 
