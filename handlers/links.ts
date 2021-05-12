@@ -1,8 +1,8 @@
 import {renderFileToString, RouterContext} from "../deps.ts";
 import {RelevantPostDao} from "../dao/relevant_post_dao.ts";
 import {db} from "../dao/db_connection.ts";
-import {getAgo} from "../utils/date_summarizer.ts";
 import {config}  from "../deps.ts";
+import {decorateLinks, Link} from "../utils/link_util.ts";
 
 const relevantPostDao = new RelevantPostDao(db)
 
@@ -17,18 +17,10 @@ export const linkGetHandler = async (ctx: RouterContext) => {
             case "success": {
 
                 const value = results.value?.asObjects()!
-                const post = [...value]
+                const links = [...value]
 
                 ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/links.ejs`, {
-                    links: post.map(link => {
-                        link.votes = link.votes ? link.votes : 0
-                        link.timestamp = getAgo(link.timestamp, Date.now())
-                        link.website = new URL(link.website).origin
-                        link.discussurl = `${origin}/${new URL(link.website).hostname}/?itemid=${link.uuid}`
-                        return Object.assign(link, {
-                            summary: link.summary.split(" ").splice(0, 30).join(" ") ?? ""
-                        });
-                    }),
+                    links: decorateLinks(links as Link[], origin),
                     origin: origin,
                     currentUser: ctx.state.currentUser
                 })

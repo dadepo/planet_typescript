@@ -1,7 +1,7 @@
 import { db } from "../dao/db_connection.ts"
 import {config, renderFileToString, RouterContext} from "../deps.ts";
 import {RelevantPostDao} from "../dao/relevant_post_dao.ts";
-import {getAgo} from "../utils/date_summarizer.ts";
+import {decorateLinks, Link} from "../utils/link_util.ts";
 
 const relevantPostDao = new RelevantPostDao(db)
 
@@ -31,24 +31,13 @@ export const getAllWeekLinks =  async (ctx: RouterContext) => {
         case "success": {
             const values = results.value?.asObjects()
             if (values) {
-
-                const links = [...values].map(link => {
-                    link.votes = link.votes ? link.votes : 0
-                    link.timestamp = getAgo(link.timestamp, Date.now())
-                    link.website = new URL(link.website).origin
-                    link.discussurl = `${origin}/${new URL(link.website).hostname}/?itemid=${link.uuid}`
-                    return Object.assign(link, {
-                        summary: link.summary.split(" ").splice(0, 30).join(" ") ?? ""
-                    });
-                })
-
+                const links = decorateLinks([...values] as Link[], origin)
                 ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/home.ejs`, {
                     links: links.reverse(),
                     origin: origin,
                     page: 0,
                     currentUser: ctx.state.currentUser
                 })
-
             } else {
                 ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/home.ejs`, {
                     links: []

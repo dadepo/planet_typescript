@@ -3,10 +3,9 @@ import {RouterContext}  from "../deps.ts";
 import {config}  from "../deps.ts";
 import { db } from "../dao/db_connection.ts"
 import {renderFileToString} from "../deps.ts"
-import {getAgo} from "../utils/date_summarizer.ts";
+import {Link, sortByScore} from "../utils/link_util.ts";
 
 const relevantPostDao = new RelevantPostDao(db)
-
 
 export const indexHandler = async (ctx: RouterContext) => {
     const origin = new URL(config()["RESET_LINK"]).origin
@@ -20,21 +19,11 @@ export const indexHandler = async (ctx: RouterContext) => {
     let results = relevantPostDao.getAllVisiblePostsOrderByVotes(offset, limit as number)
     switch(results.kind) {
         case ("success"): {
-
             const values = results.value?.asObjects()
-       
             if (values) {
                 const links = [...values]
                 ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/home.ejs`, {
-                    links: links.map(link => {
-                        link.votes = link.votes ? link.votes : 0
-                        link.timestamp = getAgo(link.timestamp, Date.now())
-                        link.website = new URL(link.website).origin
-                        link.discussurl = `${origin}/${new URL(link.website).hostname}/?itemid=${link.uuid}`
-                        return Object.assign(link, {
-                            summary: link.summary.split(" ").splice(0, 30).join(" ") ?? ""
-                        });
-                    }),
+                    links: sortByScore(links as Link[], origin),
                     origin: origin,
                     page: (page === 0) ? 2 : page + 1,
                     currentUser: ctx.state.currentUser

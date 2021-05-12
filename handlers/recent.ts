@@ -3,10 +3,9 @@ import {config, RouterContext} from "../deps.ts";
 
 import { db } from "../dao/db_connection.ts"
 import {renderFileToString} from "../deps.ts"
-import {getAgo} from "../utils/date_summarizer.ts";
+import {decorateLinks, Link} from "../utils/link_util.ts";
 
 const relevantPostDao = new RelevantPostDao(db)
-
 
 export const recentHandler = async (ctx: RouterContext) => {
     const origin = new URL(config()["RESET_LINK"]).origin
@@ -22,21 +21,12 @@ export const recentHandler = async (ctx: RouterContext) => {
     let results = relevantPostDao.getAllVisiblePostsOrderByTime(offset, limit as number)
     switch(results.kind) {
         case ("success"): {
-
             const values = results.value?.asObjects()
        
             if (values) {
                 const links = [...values]
                 ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/home.ejs`, {
-                    links: links.map(link => {
-                        link.votes = link.votes ? link.votes : 0
-                        link.timestamp = getAgo(link.timestamp, Date.now())
-                        link.website = new URL(link.website).origin
-                        link.discussurl = `${origin}/${new URL(link.website).hostname}/?itemid=${link.uuid}`
-                        return Object.assign(link, {
-                            summary: link.summary.split(" ").splice(0, 30).join(" ") ?? ""
-                        });
-                    }),
+                    links: decorateLinks(links as Link[], origin),
                     origin: origin,
                     page: (page === 0) ? 2 : page + 1,
                     currentUser: ctx.state.currentUser
