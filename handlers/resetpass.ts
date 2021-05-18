@@ -44,6 +44,7 @@ export const sendResetLinkPostHandler = async (ctx: RouterContext) => {
             const bareLink = new Date().toISOString() + Math.random().toString();
             const sha256 = new Sha256();
             let reset = encode(sha256.update(bareLink).toString()).replace("==", "")
+            resetDao.deleteResetLink(email);
             const result = resetDao.addResetLink(email, bareLink, reset);
             switch (result.kind) {
                 case "success": {
@@ -84,15 +85,14 @@ export const renderPageGetHandler = async (ctx: RouterContext) => {
 
             if (!isExpired(entry.timestamp)) {
                 ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/reset_pass.ejs`, {
-                    email: entry.email
+                    email: entry.email,
+                    resetLink: entry.reset_link
                 });
                 return
             } else {
                 ctx.response.redirect("../")
                 return
             }
-
-            break
         }
         case("fail"): {
             ctx.response.redirect("./")
@@ -105,20 +105,38 @@ export const renderPageGetHandler = async (ctx: RouterContext) => {
 export const updatePasswordPostHandler = async (ctx: RouterContext) => {
     let req = await ctx.request.body().value
     let email = req.get("email")
+    const resetLink = req.get("reset_link");
     let newPassword = await bcrypt.hash(req.get("new_password"))
+    const linkFound = resetDao.getByResetLink(resetLink)
 
-    const result = userDao.updatePassword(email, newPassword);
-    switch(result.kind) {
+    switch(linkFound.kind) {
         case ("success"): {
-            resetDao.deleteResetLink(email)
-            ctx.response.redirect("../../")
+
+            if([...linkFound.value!.asObjects()!].length === 1) {
+                const result = userDao.updatePassword(email, newPassword);
+                switch(result.kind) {
+                    case ("success"): {
+                        resetDao.deleteResetLink(email)
+                        ctx.response.redirect("../../")
+                        break
+                    }
+                    case ("fail"): {
+                        console.log(result.message!)
+                        ctx.response.redirect("../../")
+                        break
+                    }
+                }
+            } else {
+                console.log("Reset link not found")
+                ctx.response.redirect("../../")
+                return;
+            }
             break
         }
         case ("fail"): {
-            console.log(result.message!)
-            break
+            ctx.response.redirect("../../")
+            break;
         }
-
     }
 }
 
