@@ -2,7 +2,8 @@ import {REDIRECT_BACK, renderFileToString, RouterContext} from "../deps.ts";
 import * as bcrypt from "https://deno.land/x/bcrypt@v0.2.4/mod.ts";
 import {db} from "../dao/db_connection.ts";
 import {UserDao} from "../dao/users_dao.ts";
-import { create } from "https://deno.land/x/djwt@v2.2/mod.ts"
+import { create } from "https://deno.land/x/djwt@v2.2/mod.ts";
+import {config}  from "../deps.ts";
 const userDao = new UserDao(db)
 
 export const loginIndexGetHandler = async (ctx: RouterContext) => {
@@ -27,7 +28,7 @@ export const loginPostHandler = async (ctx: RouterContext) => {
 
                 const jwt = await create(
                     { alg: "HS512", typ: "JWT" },
-                    { iss: email, exp: new Date().getTime() * 1000 * 3600}, "secret"
+                    { iss: email, exp: new Date().getTime() * 1000 * 3600}, config()["JWT_KEY"]
                 )
 
                 ctx.cookies.set('jwt', jwt)
