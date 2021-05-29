@@ -11,7 +11,7 @@ const oauth2Client = new OAuth2Client({
     clientSecret: config()["GITHUB_SECRET"],
     authorizationEndpointUri: "https://github.com/login/oauth/authorize",
     tokenUri: "https://github.com/login/oauth/access_token",
-    redirectUri: "http://localhost:4300/oauth2/callback/github",
+    redirectUri: "https://planettypescript.com:4300/oauth2/callback/github",
     defaults: {
         scope: ["read:user", "user:email"],
     },
