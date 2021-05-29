@@ -11,7 +11,7 @@ Deno.test({
     async fn(){
         const sut = new UserDao(new DB(":memory:"))
 
-        sut.addUser("display", "test@example.com", "hash", "auth")
+        sut.addUser("display", "test@example.com", "hash", "auth", "")
         const dbresults = sut.findUserByEmail("test@example.com") as Success<any>;
         const result = [...dbresults.value]
 
@@ -40,7 +40,7 @@ Deno.test({
     async fn(){
         const sut = new UserDao(new DB(":memory:"))
 
-        sut.addUser("display", "test@example.com", "hash", "auth")
+        sut.addUser("display", "test@example.com", "hash", "auth", "")
         const dbresults = sut.findUserByEmailAndPassword("test@example.com", "hash") as Success<any>;
 
         const result = [...dbresults.value]
@@ -71,7 +71,7 @@ Deno.test({
     async fn(){
         const sut = new UserDao(new DB(":memory:"))
 
-        sut.addUser("display", "test@example.com", "hash", "auth")
+        sut.addUser("display", "test@example.com", "hash", "auth", "")
 
         sut.updatePassword("test@example.com", "hash123") as Success<any>;
 
@@ -84,12 +84,29 @@ Deno.test({
 
 
 Deno.test({
+    name: "Successful update location",
+    only: false,
+    async fn(){
+        const sut = new UserDao(new DB(":memory:"))
+
+        sut.addUser("display", "test@example.com", "hash", "auth", "")
+
+        sut.updateLocation("test@example.com", "amsterdam") as Success<any>;
+
+        const dbresults = sut.findUserByEmail("test@example.com") as Success<any>;
+        const result = [...dbresults.value]
+
+        assertEquals(result[0].location, "amsterdam")
+    }
+})
+
+Deno.test({
     name: "Successful use findUserDetailsByEmail",
     only: false,
     async fn(){
         const sut = new UserDao(new DB(":memory:"))
 
-        sut.addUser("display", "test@example.com", "hash", "auth")
+        sut.addUser("display", "test@example.com", "hash", "auth", "")
         const dbresults = sut.findUserDetailsByEmail("test@example.com") as Success<any>;
         const result = [...dbresults.value]
 
