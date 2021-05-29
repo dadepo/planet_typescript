@@ -4,6 +4,15 @@
     <%- await include('views/partials/ga.ejs') %>
     <title>Login</title>
 </head>
+<script type="text/javascript">
+    window.addEventListener("DOMContentLoaded", () => {
+       document.getElementById("github_login").addEventListener("click", (e) => {
+       e.preventDefault()
+       
+       window.location.href = "/login/github"
+   })
+});
+</script>
 <body>
 <%- await include('views/partials/header.ejs') %>
 <main>
@@ -11,21 +20,33 @@
         <div>Voting requires login in</div>
         <hr/>
         <form action="/login" method=post>
-            <div class="form-group">
-                <label>Username</label>
-                <input type="text" name="email" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" name="password" class="form-control" required>
-            </div>
-            <div>
-                <button type="submit" class="btn btn-primary">Login</button>
-                <div class="form-links">
-                    <a href="/register">Create new account</a><br/>
-                    <a href="/reset">Reset forgotten password</a>
+
+            <div id="form_flex_container">
+                <div id="username_password">
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" name="email" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" name="password" class="form-control" required>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary">Login</button>
+                        <div class="form-links">
+                            <a href="/register">Create new account</a><br/>
+                            <a href="/reset">Reset forgotten password</a>
+                        </div>
+                    </div>
+                </div>
+                <div id="github">
+                    <div id="github_login">
+                        <span>Sign in with Github</span> 
+                        <img style="vertical-align:middle" src="images/github-mark.png"  alt="sign in with github"/>
+                    </div>
                 </div>
             </div>
+
         </form>
     </article>
     <aside>

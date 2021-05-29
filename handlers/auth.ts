@@ -1,18 +1,96 @@
 import {REDIRECT_BACK, renderFileToString, RouterContext} from "../deps.ts";
+import { OAuth2Client } from "../deps.ts";
 import * as bcrypt from "https://deno.land/x/bcrypt@v0.2.4/mod.ts";
 import {db} from "../dao/db_connection.ts";
 import {UserDao} from "../dao/users_dao.ts";
 import { create } from "https://deno.land/x/djwt@v2.2/mod.ts";
 import {config}  from "../deps.ts";
+
+const oauth2Client = new OAuth2Client({
+    clientId: "39e4a1b9e2b8bbd262dc",
+    clientSecret: config()["GITHUB_SECRET"],
+    authorizationEndpointUri: "https://github.com/login/oauth/authorize",
+    tokenUri: "https://github.com/login/oauth/access_token",
+    redirectUri: "http://localhost:4300/oauth2/callback/github",
+    defaults: {
+        scope: ["read:user", "user:email"],
+    },
+});
+
+type GitHubUserEmail = {
+    email: string,
+    primary: boolean,
+    verified: boolean,
+    visibility: string
+}
+
 const userDao = new UserDao(db)
 
 export const loginIndexGetHandler = async (ctx: RouterContext) => {
     ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/login.ejs`, {});
 }
 
-export const logoutGetHandler = async (ctx: RouterContext) => {
+export const logoutGetHandler = (ctx: RouterContext) => {
     ctx.cookies.delete("jwt")
     ctx.response.redirect(REDIRECT_BACK, "/index")
+}
+
+export const gitHubLogin = (ctx: RouterContext) => {
+    ctx.response.redirect(
+        oauth2Client.code.getAuthorizationUri(),
+    );
+}
+
+export const gitHubLoginCallback = async (ctx: RouterContext) => {
+    // Exchange the authorization code for an access token
+  const tokens = await oauth2Client.code.getToken(ctx.request.url);
+
+  // Use the access token to make an authenticated API request
+  let userResponse = await fetch("https://api.github.com/user", {
+    headers: {
+      Authorization: `Bearer ${tokens.accessToken}`,
+    },
+  });
+
+  const {name, location}: {name: string, location: string} = await userResponse.json()
+
+  userResponse = await fetch("https://api.github.com/user/emails", {
+    headers: {
+      Authorization: `Bearer ${tokens.accessToken}`,
+    },
+  });
+
+  const jsonResponse = await userResponse.json() as Array<GitHubUserEmail>;
+  
+  const email = jsonResponse
+  .filter(email => {
+      return email.primary && email.verified && email.visibility === "public"
+  })[0]
+  
+  const result = userDao.findUserByEmail(email.email)
+  switch (result.kind) {
+      case ("success"): {
+          // update location if not previously saved
+          if (!result.value![0].location || result.value![0].location === "") {
+            userDao.updateLocation(email.email, location)
+          }
+          // user details already saved, set jwt token. Redirect to home page
+          ctx.cookies.set('jwt', await createToken(email.email))
+          ctx.response.redirect(REDIRECT_BACK, "/")
+        break
+      }
+      case ("fail"): {
+        if (result.message === "Not found") {
+            // user details not saved already. save now
+            userDao.addUser(name, email.email, "", "github", location)
+        } else {
+            console.log("Error in user retrieval step after github login")
+            // TODO probably send back some error message
+            ctx.response.redirect(REDIRECT_BACK, "/")
+        }
+        break
+      }
+  }
 }
 
 export const loginPostHandler = async (ctx: RouterContext) => {
@@ -25,13 +103,7 @@ export const loginPostHandler = async (ctx: RouterContext) => {
     switch (result.kind) {
         case "success": {
             if (await bcrypt.compare(password, result.value![0].password)) {
-
-                const jwt = await create(
-                    { alg: "HS512", typ: "JWT" },
-                    { iss: email, exp: new Date().getTime() * 1000 * 3600}, config()["JWT_KEY"]
-                )
-
-                ctx.cookies.set('jwt', jwt)
+                ctx.cookies.set('jwt', await createToken(email))
                 ctx.response.redirect(REDIRECT_BACK, "/")
             } else {
                 ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/login.ejs`, {
@@ -59,7 +131,7 @@ export const registerPostHandler = async (ctx: RouterContext) => {
     let password = await bcrypt.hash(req.get("password"))
 
 
-    const result = userDao.addUser(displayName, email, password, "inbuilt")
+    const result = userDao.addUser(displayName, email, password, "inbuilt", "")
     switch (result.kind) {
         case "success": {
             ctx.response.redirect(REDIRECT_BACK, "/login")
@@ -71,4 +143,13 @@ export const registerPostHandler = async (ctx: RouterContext) => {
             break;
         }
     }
+}
+
+
+const createToken = async (email: string) => {
+    const jwt = await create(
+        { alg: "HS512", typ: "JWT" },
+        { iss: email, exp: new Date().getTime() * 1000 * 3600}, config()["JWT_KEY"]
+    )
+    return jwt;
 }

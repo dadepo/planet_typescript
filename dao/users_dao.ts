@@ -3,15 +3,15 @@ import { DB } from "../deps.ts";
 export class UserDao {
     constructor(private db: DB) {
         this.db.query(
-            "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, display_name TEXT, email TEXT UNIQUE, password TEXT UNIQUE, auth_method TEXT, timestamp INTEGER)",
+            "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, display_name TEXT, email TEXT UNIQUE, password TEXT UNIQUE, auth_method TEXT, location TEXT, timestamp INTEGER)",
         );
     }
 
-    addUser(displayName: string, email: string, passwordHash: string, authMethod: string) {
+    addUser(displayName: string, email: string, passwordHash: string, authMethod: string, location: string) {
         try {
             this.db.query(
-                "INSERT INTO users (display_name, email, password, auth_method) VALUES (?, ?, ?, ?)",
-                [displayName, email, passwordHash, authMethod],
+                "INSERT INTO users (display_name, email, password, auth_method, location) VALUES (?, ?, ?, ?, ?)",
+                [displayName, email, passwordHash, authMethod, location],
             )
             return {
                 kind:"success",
@@ -83,6 +83,18 @@ export class UserDao {
         try {
             this.db.query("UPDATE users SET (password) = (?) where email = (?)", [passwordHash, email])
 
+            return {
+                kind:"success",
+                value: true
+            }
+        } catch(e) {
+            return {kind:"fail", message: (e as Error).message}
+        }
+    }
+
+    updateLocation(email: string, location: string) {
+        try {
+            this.db.query("UPDATE users SET (location) = (?) where email = (?)", [location, email])
             return {
                 kind:"success",
                 value: true

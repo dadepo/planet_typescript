@@ -6,6 +6,8 @@ import {hideLinksPostHandler, hidePostHandler, linksGetHandler, relevantpostGetH
 
 import {recentHandler} from "./handlers/recent.ts";
 import {
+    gitHubLogin,
+    gitHubLoginCallback,
     loginIndexGetHandler,
     loginPostHandler,
     logoutGetHandler,
@@ -56,6 +58,8 @@ router
 router
     .get("/register", registerIndexGetHandler)
     .get("/login", loginIndexGetHandler)
+    .get("/oauth2/callback/github", gitHubLoginCallback)
+    .get("/login/github", gitHubLogin)
     .get("/logout", logoutGetHandler)
     .post("/login", loginPostHandler)
     .post("/register", registerPostHandler)

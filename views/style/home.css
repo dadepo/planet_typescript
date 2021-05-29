@@ -134,11 +134,6 @@ main > article {
     margin:5px 0
 }
 
-.form-group label {
-    display: inline-block;
-    width: 10%;
-}
-
 .form-links a {
     display: inline-block;
     margin: 5px 0;
@@ -220,7 +215,6 @@ footer {
 }
 
 
-
 div#link_wrapper {
     display:flex
 }
@@ -241,3 +235,30 @@ div#vote_wrapper {
     color: rgb(37, 98, 220);
 }
 
+div#form_flex_container {
+    display: flex;
+    flex-direction: row;
+}
+
+
+div#form_flex_container div#username_password {
+    flex-grow:3;
+    border-right: 1px solid #aaaaaa;
+}
+
+div#form_flex_container div#github {
+    flex-grow:4
+}
+
+#github {
+    text-align: center;
+}
+
+div#github_login {
+    width: 70%;
+    padding:5px;
+    border: 1px solid #eee;
+    display: inline-block;
+    cursor: pointer;
+
+}
