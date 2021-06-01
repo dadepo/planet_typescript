@@ -1,4 +1,4 @@
-import {Application, oakCors, Router, RouterContext, send} from "./deps.ts"
+import {Application, cron, oakCors, Router, RouterContext, send} from "./deps.ts"
 import { submitHandler, submitHandlerProcessor} from "./handlers/submit.ts";
 import { indexHandler } from "./handlers/home.ts";
 import { postVoteHandler } from "./handlers/voting.ts";
@@ -24,7 +24,7 @@ import {
     updatePasswordPostHandler
 } from "./handlers/resetpass.ts";
 import {linkGetHandler} from "./handlers/links.ts";
-import {getAllWeekLinks, getWeekListHandler} from "./handlers/weekly.ts";
+import {getAllWeekLinks, getWeekListHandler, sendWeekly} from "./handlers/weekly.ts";
 
 const app = new Application()
 const router = new Router();
@@ -105,6 +105,8 @@ app.addEventListener("listen", evt => {
         }
     } as any);
 
+    // Every friday at 12:30pm
+    cron("0 30 12 * * 5", sendWeekly);
 })
 
 await app.listen({ port: 4300 });

@@ -14,3 +14,4 @@ export { encode } from "https://deno.land/std/encoding/base64.ts";
 export { Sha256 } from "https://deno.land/std@0.50.0/hash/sha256.ts"
 export { v4 } from "https://deno.land/std@0.94.0/uuid/mod.ts"
 export { OAuth2Client } from "https://deno.land/x/oauth2_client/mod.ts";
+export { cron } from 'https://deno.land/x/deno_cron/cron.ts';

@@ -17,15 +17,17 @@ const getNumberOfWeeks = (now:number, then:number) => {
     )
 }
 
-export const getAllWeekLinks =  async (ctx: RouterContext) => {
-    const weekId = parseInt(ctx.params.id!)
+const getLinksForAWeek = (weekId: number) => {
     const weekInMilli = 604800000
-    const origin = new URL(config()["RESET_LINK"]).origin
-
     const from = weekId === 1 ? firstPostTimestamp : (weekId * weekInMilli) + firstPostTimestamp
     const till = from + weekInMilli
+    return relevantPostDao.getAllVisiblePostsBetweenTimestamp(from, till);
+}
 
-    const results = relevantPostDao.getAllVisiblePostsBetweenTimestamp(from, till);
+export const getAllWeekLinks =  async (ctx: RouterContext) => {
+    const weekId = parseInt(ctx.params.id!)
+    const origin = new URL(config()["RESET_LINK"]).origin
+    const results = getLinksForAWeek(weekId);
 
     switch (results.kind) {
         case "success": {
@@ -72,5 +74,69 @@ export const getWeekListHandler = async (ctx: RouterContext) => {
     })
 }
 
+export const sendWeekly = async () => {
+    const origin = new URL(config()["RESET_LINK"]).origin
 
+    const numberOfWeeks = getNumberOfWeeks(Date.now(), firstPostTimestamp);
+    const results = getLinksForAWeek(numberOfWeeks);
 
+    switch (results.kind) {
+        case "success": {
+            const values = results.value?.asObjects()
+            if (values) {
+                const links = decorateLinks([...values] as Link[], origin)
+                const content = await renderFileToString(`${Deno.cwd()}/views/emails/weekly.ejs`, {
+                    date: new Date().toDateString(),
+                    links: links
+                })
+
+                const dc = "us1";
+                const apiKey = config()["MAILCHIMP_KEY"];
+                const baseUrl = `https://user:${apiKey}@${dc}.api.mailchimp.com/3.0`;
+
+                const emailTemplate = `${baseUrl}/campaigns/058215470d/actions/replicate`
+                const replicatedTemplate = await fetch(emailTemplate, {
+                    method: "POST"
+                })
+
+                const newCampaignId = (await replicatedTemplate.json()).id
+                const campaignUrl = `${baseUrl}/campaigns/${newCampaignId}/content`;
+
+                // Update with content
+                console.log(11112, content)
+                await fetch(campaignUrl, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        "html": content
+                    }),
+                });
+
+                const sendUrl = `${baseUrl}/campaigns/${newCampaignId}/actions/send`;
+                const sendResponse = await fetch(sendUrl, {
+                    method: "POST",
+                });
+
+                if(sendResponse.ok) {
+                    // attempt to clean after 1 minutes
+                    const sleep = (milliseconds: number) => new Promise(resolve => setTimeout(resolve, milliseconds))
+                    await sleep(60000)
+                    console.log("Weekly update sent. Attempt cleanup of email on MC")
+                    const deleteCampaignUrl = `${baseUrl}/campaigns/${newCampaignId}`
+                    await fetch(deleteCampaignUrl, {
+                        method: "DELETE",
+                    });
+                }
+            } else {
+                console.log("Could not send week update")
+            }
+            break
+        }
+        case "fail": {
+            console.log("Could not send week update, failed when fetching:", results.message)
+            break
+        }
+    }
+}
