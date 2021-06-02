@@ -262,3 +262,17 @@ div#github_login {
     cursor: pointer;
 
 }
+
+div#info {
+    font-size: small;
+    color: #666666;
+}
+
+.side-note {
+    color: #666666;
+}
+
+#twt-follow {
+    display: inline-block;
+    margin-bottom: 5px;
+}

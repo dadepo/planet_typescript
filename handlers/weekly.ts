@@ -70,7 +70,7 @@ export const getWeekListHandler = async (ctx: RouterContext) => {
         links: weeklyLinks.reverse(),
         origin: origin,
         page: 0,
-        currentUser: null
+        currentUser: ctx.state.currentUser
     })
 }
 
