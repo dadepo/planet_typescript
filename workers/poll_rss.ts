@@ -16,7 +16,7 @@ const rssLinkDao = new RssLinkDao(db)
 const domParser = new DOMParser()
 
 
-async function wait(ms: number) {
+async function sleep(ms: number) {
     return new Promise(resolve => {
       setTimeout(resolve, ms);
     });
@@ -104,7 +104,8 @@ const poll_rss_link = async (website:string, rssLink: string) => {
                 }
 
             }
-            await wait(5000);
+
+            await sleep(5000);
         }
     } catch (e) {
         console.log(`Error processing ${website} and ${rssLink}`)
@@ -113,6 +114,7 @@ const poll_rss_link = async (website:string, rssLink: string) => {
 
 
 const poll = () => {
+    console.log(`started polling at ${new Date().toUTCString()}`)
     let result = rssLinkDao.getAllActiveRSSLinks()
     switch(result.kind) {
         case ("fail"): {
