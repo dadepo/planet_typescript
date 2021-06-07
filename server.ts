@@ -106,7 +106,7 @@ app.addEventListener("listen", evt => {
     } as any);
 
     // Every friday at 12:30pm
-    cron("0 30 11 * * 1", sendWeekly);
+    cron("0 30 12 * * 5", sendWeekly);
 })
 
 await app.listen({ port: 4300 });
