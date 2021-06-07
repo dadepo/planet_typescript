@@ -75,6 +75,7 @@ export const getWeekListHandler = async (ctx: RouterContext) => {
 }
 
 export const sendWeekly = async () => {
+    console.log("sending weekly newsletter")
     const origin = new URL(config()["RESET_LINK"]).origin
 
     const numberOfWeeks = getNumberOfWeeks(Date.now(), firstPostTimestamp);
