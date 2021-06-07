@@ -141,6 +141,10 @@ main > article {
     margin: 5px 0;
 }
 
+.form-control {
+    margin-right: 80%;
+}
+
 main > aside {
     width: 250px;
     margin-left: 10px;
