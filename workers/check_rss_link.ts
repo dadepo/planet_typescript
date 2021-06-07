@@ -1,4 +1,3 @@
-import {deserializeFeed, REDIRECT_BACK, renderFileToString} from '../deps.ts';
 import { DOMParser } from "../deps.ts";
 
 import { db } from "../dao/db_connection.ts"
@@ -37,5 +36,5 @@ const processLink = async (link: string) => {
 }
 
 const isXML = (content: string) => {
-    return content.includes("<?xml")
+    return content.includes("<?xml") || content.includes("xmlns")
 }
