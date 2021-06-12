@@ -79,7 +79,7 @@ export const sendWeekly = async () => {
     const origin = new URL(config()["RESET_LINK"]).origin
 
     const numberOfWeeks = getNumberOfWeeks(Date.now(), firstPostTimestamp);
-    const results = getLinksForAWeek(numberOfWeeks);
+    const results = getLinksForAWeek(numberOfWeeks - 1);
 
     switch (results.kind) {
         case "success": {
