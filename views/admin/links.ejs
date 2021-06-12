@@ -17,6 +17,24 @@
                 body: JSON.stringify({id, action:'show'})
             })
         }
+
+        const addAuthor = (id, rssLink) => {
+            const handle = document.getElementById(`twitter-handle-${id}`).value
+
+            fetch(`/admin/tweet/handle`, {
+                method: "POST",
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({rssLink, handle})
+            })
+        }
+
+        const removeAuthor = (rssLink) => {
+            fetch(`/admin/tweet/handle`, {
+                method: "DELETE",
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({rssLink})
+            })
+        }
     </script>
 </head>
 <body>
@@ -36,7 +54,7 @@
                 <td><%= link.id %></td>
                 <td><%= link.website %></td>
                 <td><%= link.rss_link %></td>
-                <td><%= new Date(link.timestamp) %></td>
+                <td><%= new Date(link.timestamp).toUTCString() %></td>
                 <% if (link.hidden === 0 || link.hidden === null) { %>
                     <td><%= "visible" %></td>
                 <% } else { %>
@@ -44,7 +62,10 @@
                 <% }  %>
                 <td>
                     <button onclick="hide(<%= link.id %>)" id="hide-<%= link.id %>" type="button">Hide</button> |
-                    <button onclick="show(<%= link.id %>)" id="show-<%= link.id %>" type="button">Show</button>
+                    <button onclick="show(<%= link.id %>)" id="show-<%= link.id %>" type="button">Show</button> |
+                    <input value="<%= link.twitterHandle %>" type="text" name="twitter-handle-<%= link.id %>" id="twitter-handle-<%= link.id %>"/>
+                    <button onclick="addAuthor(<%= link.id %>, '<%= link.rss_link %>')">Add</button>
+                    <button onclick="removeAuthor('<%= link.rss_link %>')">Remove</button>
                 </td>
             </tr>
         <% }); %>

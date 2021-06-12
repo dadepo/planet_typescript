@@ -2,7 +2,13 @@ import {Application, cron, oakCors, Router, RouterContext, send} from "./deps.ts
 import { submitHandler, submitHandlerProcessor} from "./handlers/submit.ts";
 import { indexHandler } from "./handlers/home.ts";
 import { postVoteHandler } from "./handlers/voting.ts";
-import {hideLinksPostHandler, hidePostHandler, linksGetHandler, relevantpostGetHandler} from "./handlers/admin.ts";
+import {
+    addAuthorTwitterPostHandler,
+    hideLinksPostHandler,
+    hidePostHandler,
+    linksGetHandler,
+    relevantpostGetHandler, removeAuthorTwitterDeleteHandler
+} from "./handlers/admin.ts";
 
 import {recentHandler} from "./handlers/recent.ts";
 import {
@@ -39,6 +45,8 @@ router.get("/admin/posts/:page", isAdmin, relevantpostGetHandler)
 router.get("/admin/links", isAdmin, linksGetHandler)
 router.post("/admin/links/visibility", isAdmin, hideLinksPostHandler)
 router.post("/admin/pending/visibility", isAdmin, hidePostHandler)
+router.post("/admin/tweet/handle", isAdmin, addAuthorTwitterPostHandler)
+router.delete("/admin/tweet/handle", isAdmin, removeAuthorTwitterDeleteHandler)
 
 router.post("/vote", hasCurrentUser, postVoteHandler)
 router.post("/submit", submitHandlerProcessor)

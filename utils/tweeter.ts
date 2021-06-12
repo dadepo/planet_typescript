@@ -18,12 +18,12 @@ if (config()["ENV"] === "prod") {
 
 const origin = new URL(config()["RESET_LINK"]).origin
 
-export const postTweet = (input: {title: string, url: string, uuid: string}) => {
+export const postTweet = (input: {title: string, url: string, uuid: string, twitterHandle:string}) => {
 
     let discussUrl = `${origin}/${new URL(input.url).hostname}/?itemid=${input.uuid}`
 
     let tweet = `
-    ${input.title}
+    ${input.title} ${input.twitterHandle ? `by @${input.twitterHandle.replaceAll("@", "").toLowerCase()}` : ""}
     
 Link: ${input.url}
 Discuss: ${discussUrl}

@@ -9,9 +9,11 @@ import {config}  from "../deps.ts";
 
 import {isRelevant} from "../utils/patterns.ts";
 import {postTweet} from "../utils/tweeter.ts";
+import {TwitterHandleDao} from "../dao/twitter_handle_dao.ts";
 
 const relevantPostDao = new RelevantPostDao(db)
 const rssLinkDao = new RssLinkDao(db)
+const twtHandleDao = new TwitterHandleDao(db);
 
 const domParser = new DOMParser()
 
@@ -76,7 +78,6 @@ const poll_rss_link = async (website:string, rssLink: string) => {
             let title = item.title
             let summary = item.summary
             let url = item.url
-
             let doc: any = domParser.parseFromString(summary, "text/html")
             let relevant = isRelevant(title) || isRelevant(doc.textContent)
             // TODO first extract all the url and check in one go, instead of one by one
@@ -87,9 +88,9 @@ const poll_rss_link = async (website:string, rssLink: string) => {
                     if (relevant) {
                         if (result.value === 0) {
                             let uuid = relevantPostDao.savePost(website, url, title, doc.textContent).value!
-
-                            postTweet({title, url, uuid})
-
+                            const twitterHandleResult = [...twtHandleDao.getTwitterHandle(rssLink).value!.asObjects()][0]
+                            const twitterHandle = twitterHandleResult ? twitterHandleResult.twitter_handle : ""
+                            postTweet({title, url, uuid, twitterHandle})
                         } else {
                             // console.log("already saved", url)
                         }
@@ -108,6 +109,7 @@ const poll_rss_link = async (website:string, rssLink: string) => {
             await sleep(5000);
         }
     } catch (e) {
+        console.log(e)
         console.log(`Error processing ${website} and ${rssLink}`)
     }
 }
