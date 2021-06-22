@@ -26,6 +26,7 @@ export const recentHandler = async (ctx: RouterContext) => {
             if (values) {
                 const links = [...values]
                 ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/home.ejs`, {
+                    title: "Recent Links",
                     links: decorateLinks(links as Link[], origin),
                     origin: origin,
                     page: (page === 0) ? 2 : page + 1,

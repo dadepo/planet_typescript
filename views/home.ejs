@@ -4,7 +4,12 @@
         <link rel="stylesheet" href="<%= origin %>/style/home.css">
         <%- await include('views/partials/ga.ejs') %>
         <%- await include('views/partials/voter.ejs') %>
-        <title>Home</title>
+        <title>
+            <% if (typeof title !== 'undefined') { %>
+                <%= title %>
+            <% } else { %>
+                Home <% } %>- PlanetTypeScript
+        </title>
     </head>
     <body>
     <%- await include('views/partials/header.ejs', {origin}) %>

@@ -35,6 +35,7 @@ export const getAllWeekLinks =  async (ctx: RouterContext) => {
             if (values) {
                 const links = decorateLinks([...values] as Link[], origin)
                 ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/home.ejs`, {
+                    title: "Weekly links",
                     links: links.reverse(),
                     origin: origin,
                     page: 0,

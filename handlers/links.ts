@@ -20,6 +20,7 @@ export const linkGetHandler = async (ctx: RouterContext) => {
                 const links = [...value]
 
                 ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/links.ejs`, {
+                    title: "Link",
                     links: decorateLinks(links as Link[], origin),
                     origin: origin,
                     currentUser: ctx.state.currentUser
