@@ -87,6 +87,10 @@ export const sendWeekly = async () => {
             const values = results.value?.asObjects()
             if (values) {
                 const links = decorateLinks([...values] as Link[], origin)
+                if (links.length < 1) {
+                    console.log("Strange, no links found")
+                    return;
+                }
                 const content = await renderFileToString(`${Deno.cwd()}/views/emails/weekly.ejs`, {
                     date: new Date().toDateString(),
                     links: links
