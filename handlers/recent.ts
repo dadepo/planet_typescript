@@ -7,7 +7,7 @@ import {decorateLinks, Link} from "../utils/link_util.ts";
 
 const relevantPostDao = new RelevantPostDao(db)
 
-export const recentHandler = async (ctx: RouterContext) => {
+export const recentHandler = async (ctx: RouterContext<"/recent">) => {
     const origin = new URL(config()["RESET_LINK"]).origin
 
     let page = parseInt(ctx.request.url.searchParams.get("page")  ?? "0")

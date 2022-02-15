@@ -6,11 +6,11 @@ import {validURL} from "../utils/url_validator.ts";
 
 const pendingDao = new PendingSubmissionDao(db)
 
-export const submitHandler = async (ctx: RouterContext) => {
+export const submitHandler = async (ctx: RouterContext<"/submit">) => {
     ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/submit.ejs`, {})
 }
 
-export const submitHandlerProcessor = async (ctx: RouterContext) => {
+export const submitHandlerProcessor = async (ctx: RouterContext<"/submit">) => {
     let data: {get: Function} = await ctx.request.body({ type: "form" }).value;
 
     const submit = data.get("link")

@@ -6,7 +6,7 @@ import {decorateLinks, Link} from "../utils/link_util.ts";
 
 const relevantPostDao = new RelevantPostDao(db)
 
-export const linkGetHandler = async (ctx: RouterContext) => {
+export const linkGetHandler = async (ctx: RouterContext<"/:website">) => {
     const origin = new URL(config()["RESET_LINK"]).origin
     ctx.response.status = 200
     const uuid = ctx.request.url.searchParams.get('itemid')

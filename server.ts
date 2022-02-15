@@ -73,16 +73,16 @@ router
     .post("/register", registerPostHandler)
     .post("/updatepassword", updatePasswordPostHandler)
 
-router.get("/style/:filename", async (ctx: RouterContext) => {      
+router.get("/style/:filename", async (ctx: RouterContext<"/style/:filename">) => {      
     ctx.response.status = 200
     await send(ctx, ctx.params.filename!, {
         root: `${Deno.cwd()}/views/style`
     })
 });
 
-router.get("/images/:filename", async (ctx: RouterContext) => {
+router.get("/images/:filename", async (ctx: RouterContext<"/images/:filename">) => {
     ctx.response.status = 200
-    await send(ctx, ctx.params.filename!, {
+    await send(ctx, ctx?.params?.filename!, {
         root: `${Deno.cwd()}/views/images`
     })
 });
@@ -92,7 +92,7 @@ router.get("/:website", linkGetHandler)
 
 // Find a better way for a fall through
 // this depends on the location
-router.get("/(.*)", (context: RouterContext) => {      
+router.get("/(.*)", (context: RouterContext<"/(.*)">) => {      
     context.response.status = 404;
     context.response.body = "404 | Page not Found";
 });

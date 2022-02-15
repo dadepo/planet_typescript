@@ -1,5 +1,4 @@
-import {RouterContext}  from "../deps.ts";
-import {renderFileToString} from "../deps.ts"
+import {renderFileToString, RouterContext} from "../deps.ts"
 import { RelevantPostDao } from "../dao/relevant_post_dao.ts"
 import { db } from "../dao/db_connection.ts"
 import {RssLinkDao} from "../dao/rss_links_dao.ts";
@@ -9,7 +8,7 @@ const relevantPostDao = new RelevantPostDao(db)
 const rssLinkDao = new RssLinkDao(db)
 const twtDao = new TwitterHandleDao(db)
 
-export const hidePostHandler = async (ctx: RouterContext) => {
+export const hidePostHandler = async (ctx: RouterContext<"/admin/pending/visibility">) => {
     let response = await ctx.request.body({type: "json"}).value
 
     if (response.action === "hide") {
@@ -23,7 +22,7 @@ export const hidePostHandler = async (ctx: RouterContext) => {
     }    
 }
 
-export const relevantpostGetHandler = async (ctx: RouterContext) => {
+export const relevantpostGetHandler = async (ctx: RouterContext<"/admin/posts/:page">) => {
     let offset = 0;
     const count = 30;
 
@@ -56,7 +55,7 @@ export const relevantpostGetHandler = async (ctx: RouterContext) => {
     }
 }
 
-export const linksGetHandler = async (ctx: RouterContext) => {
+export const linksGetHandler = async (ctx: RouterContext<"/admin/links">) => {
     let results = rssLinkDao.getAllRSSLinks()
 
     switch(results.kind) {
@@ -89,7 +88,7 @@ export const linksGetHandler = async (ctx: RouterContext) => {
     }
 }
 
-export const hideLinksPostHandler = async (ctx: RouterContext) => {
+export const hideLinksPostHandler = async (ctx: RouterContext<"/admin/links/visibility">) => {
     let response = await ctx.request.body({type: "json"}).value
 
     if (response.action === "hide") {
@@ -103,13 +102,13 @@ export const hideLinksPostHandler = async (ctx: RouterContext) => {
     }
 }
 
-export const addAuthorTwitterPostHandler = async (ctx: RouterContext) => {
+export const addAuthorTwitterPostHandler = async (ctx: RouterContext<"/admin/tweet/handle">) => {
     const {rssLink, handle} = await ctx.request.body({type: "json"}).value
     twtDao.addTwitterHandler(rssLink, handle);
     ctx.response.status = 200
 }
 
-export const removeAuthorTwitterDeleteHandler = async (ctx: RouterContext) => {
+export const removeAuthorTwitterDeleteHandler = async (ctx: RouterContext<"/admin/tweet/handle">) => {
     const {rssLink} = await ctx.request.body({type: "json"}).value
     twtDao.deleteTwitterHandle(rssLink)
     ctx.response.status = 200

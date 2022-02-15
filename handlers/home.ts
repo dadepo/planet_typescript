@@ -1,13 +1,12 @@
 import { RelevantPostDao } from "../dao/relevant_post_dao.ts"
-import {RouterContext}  from "../deps.ts";
 import {config}  from "../deps.ts";
 import { db } from "../dao/db_connection.ts"
-import {renderFileToString} from "../deps.ts"
+import {renderFileToString, RouterContext} from "../deps.ts"
 import {Link, sortByScore} from "../utils/link_util.ts";
 
 const relevantPostDao = new RelevantPostDao(db)
 
-export const indexHandler = async (ctx: RouterContext) => {
+export const indexHandler = async (ctx: RouterContext<"/" | "/index">) => {
     const origin = new URL(config()["RESET_LINK"]).origin
     let page = parseInt(ctx.request.url.searchParams.get("page")  ?? "0")
     if (page === 1) {

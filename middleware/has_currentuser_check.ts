@@ -1,6 +1,6 @@
-import {RouterContext, REDIRECT_BACK}  from "../deps.ts";
+import {RouterContext}  from "../deps.ts";
 
-export const hasCurrentUser = async (ctx: RouterContext, next: Function) => {
+export const hasCurrentUser = async (ctx: RouterContext<"/vote">, next: Function) => {
     if(!ctx.state.currentUser) {
         ctx.response.status = 401
         return;

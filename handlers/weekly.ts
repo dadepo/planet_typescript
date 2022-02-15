@@ -24,8 +24,9 @@ const getLinksForAWeek = (weekId: number) => {
     return relevantPostDao.getAllVisiblePostsBetweenTimestamp(from, till);
 }
 
-export const getAllWeekLinks =  async (ctx: RouterContext) => {
-    const weekId = parseInt(ctx.params.id!)
+export const getAllWeekLinks =  async (ctx: RouterContext<"/weekly/:id">) => {
+
+    const weekId = parseInt(ctx?.params?.id!)
     const origin = new URL(config()["RESET_LINK"]).origin
     const results = getLinksForAWeek(weekId);
 
@@ -55,7 +56,7 @@ export const getAllWeekLinks =  async (ctx: RouterContext) => {
     }
 }
 
-export const getWeekListHandler = async (ctx: RouterContext) => {
+export const getWeekListHandler = async (ctx: RouterContext<"/weekly">) => {
     const origin = new URL(config()["RESET_LINK"]).origin
     const weeklyLinks = [];
     const weekInMilli = 604800000;

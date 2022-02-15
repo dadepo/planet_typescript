@@ -26,22 +26,22 @@ type GitHubUserEmail = {
 
 const userDao = new UserDao(db)
 
-export const loginIndexGetHandler = async (ctx: RouterContext) => {
+export const loginIndexGetHandler = async (ctx: RouterContext<"/login">) => {
     ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/login.ejs`, {});
 }
 
-export const logoutGetHandler = (ctx: RouterContext) => {
+export const logoutGetHandler = (ctx: RouterContext<"/logout">) => {
     ctx.cookies.delete("jwt")
     ctx.response.redirect(REDIRECT_BACK, "/index")
 }
 
-export const gitHubLogin = (ctx: RouterContext) => {
+export const gitHubLogin = (ctx: RouterContext<"/login/github">) => {
     ctx.response.redirect(
         oauth2Client.code.getAuthorizationUri(),
     );
 }
 
-export const gitHubLoginCallback = async (ctx: RouterContext) => {
+export const gitHubLoginCallback = async (ctx: RouterContext<"/oauth2/callback/github">) => {
     // Exchange the authorization code for an access token
   const tokens = await oauth2Client.code.getToken(ctx.request.url);
 
@@ -93,7 +93,7 @@ export const gitHubLoginCallback = async (ctx: RouterContext) => {
   }
 }
 
-export const loginPostHandler = async (ctx: RouterContext) => {
+export const loginPostHandler = async (ctx: RouterContext<"/login">) => {
     let req = await ctx.request.body().value
     let email = req.get("email")
     let password = req.get("password")
@@ -120,11 +120,11 @@ export const loginPostHandler = async (ctx: RouterContext) => {
     }
 }
 
-export const registerIndexGetHandler = async (ctx: RouterContext) => {
+export const registerIndexGetHandler = async (ctx: RouterContext<"/register">) => {
     ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/register.ejs`, {});
 }
 
-export const registerPostHandler = async (ctx: RouterContext) => {
+export const registerPostHandler = async (ctx: RouterContext<"/register">) => {
     let req = await ctx.request.body().value
     let displayName = req.get("display_name")
     let email = req.get("email")

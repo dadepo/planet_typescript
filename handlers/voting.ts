@@ -4,7 +4,7 @@ import {RouterContext}  from "../deps.ts";
 
 const voteDao = new VoteDao(db)
 
-export const postVoteHandler = async (ctx: RouterContext) => {
+export const postVoteHandler = async (ctx: RouterContext<"/vote">) => {
     let response: {
         id: number,
         value:number

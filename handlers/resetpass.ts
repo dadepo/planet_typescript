@@ -33,7 +33,7 @@ const mailer = async (receipient: string, message: string) => {
 };
 
 
-export const sendResetLinkPostHandler = async (ctx: RouterContext) => {
+export const sendResetLinkPostHandler = async (ctx: RouterContext<"/reset">) => {
     let req = await ctx.request.body().value
     let email = req.get("email")
 
@@ -72,7 +72,7 @@ export const sendResetLinkPostHandler = async (ctx: RouterContext) => {
     })
 }
 
-export const renderPageGetHandler = async (ctx: RouterContext) => {
+export const renderPageGetHandler = async (ctx: RouterContext<"/reset/:link">) => {
     const resetLink = ctx.params.link!;
     const result = resetDao.getByResetLink(resetLink)
     switch (result.kind) {
@@ -102,7 +102,7 @@ export const renderPageGetHandler = async (ctx: RouterContext) => {
     }
 }
 
-export const updatePasswordPostHandler = async (ctx: RouterContext) => {
+export const updatePasswordPostHandler = async (ctx: RouterContext<"/updatepassword">) => {
     let req = await ctx.request.body().value
     let email = req.get("email")
     const resetLink = req.get("reset_link");
@@ -140,7 +140,7 @@ export const updatePasswordPostHandler = async (ctx: RouterContext) => {
     }
 }
 
-export const resetGetHandler = async (ctx: RouterContext) => {
+export const resetGetHandler = async (ctx: RouterContext<"/reset">) => {
     ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/reset.ejs`, {});
 }
 
