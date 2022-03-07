@@ -3,6 +3,7 @@ import {config}  from "../deps.ts";
 import { db } from "../dao/db_connection.ts"
 import {renderFileToString, RouterContext} from "../deps.ts"
 import {Link, sortByScore} from "../utils/link_util.ts";
+import { render } from "../utils/render.ts";
 
 const relevantPostDao = new RelevantPostDao(db)
 
@@ -21,11 +22,17 @@ export const indexHandler = async (ctx: RouterContext<"/" | "/index">) => {
             const values = results.value?.asObjects()
             if (values) {
                 const links = [...values]
-                ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/home.ejs`, {
-                    links: sortByScore(links as Link[], origin),
-                    origin: origin,
-                    page: (page === 0) ? 2 : page + 1,
-                    currentUser: ctx.state.currentUser
+                await render(ctx.request.accepts(), async () => {
+                    ctx.response.type = "json";
+                    ctx.response.body = sortByScore(links as Link[], origin);
+                    console.log(sortByScore(links as Link[], origin))
+                }, async () => {
+                    ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/home.ejs`, {
+                        links: sortByScore(links as Link[], origin),
+                        origin: origin,
+                        page: (page === 0) ? 2 : page + 1,
+                        currentUser: ctx.state.currentUser
+                    })
                 })
             } else {
                 ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/home.ejs`, {
