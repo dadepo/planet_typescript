@@ -25,7 +25,6 @@ export const indexHandler = async (ctx: RouterContext<"/" | "/index">) => {
                 await render(ctx.request.accepts(), async () => {
                     ctx.response.type = "json";
                     ctx.response.body = sortByScore(links as Link[], origin);
-                    console.log(sortByScore(links as Link[], origin))
                 }, async () => {
                     ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/home.ejs`, {
                         links: sortByScore(links as Link[], origin),
@@ -35,9 +34,15 @@ export const indexHandler = async (ctx: RouterContext<"/" | "/index">) => {
                     })
                 })
             } else {
-                ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/home.ejs`, {
-                    links: []
-                })
+                await render(ctx.request.accepts(), async () => {
+                    ctx.response.type = "json";
+                    ctx.response.body = [];
+                }, async () => {
+                    ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/home.ejs`, {
+                        links: []
+                    })
+                });
+                
             }
             break
         }

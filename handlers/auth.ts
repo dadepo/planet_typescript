@@ -99,12 +99,11 @@ export const loginPostHandler = async (ctx: RouterContext<"/login">) => {
     let password = req.get("password")
 
     const result = await userDao.findUserByEmail(email)
-
     switch (result.kind) {
         case "success": {
             if (await bcrypt.compare(password, result.value![0].password)) {
                 ctx.cookies.set('jwt', await createToken(email))
-                ctx.response.redirect(REDIRECT_BACK, "/")
+                ctx.response.redirect("/index")
             } else {
                 ctx.response.body = await renderFileToString(`${Deno.cwd()}/views/login.ejs`, {
                     error: "Not found"

@@ -31,7 +31,7 @@ import {
 } from "./handlers/resetpass.ts";
 import {linkGetHandler} from "./handlers/links.ts";
 import {getAllWeekLinks, getWeekListHandler, sendWeekly} from "./handlers/weekly.ts";
-
+import { composeMiddleware as compose } from "https://deno.land/x/oak/mod.ts";
 const app = new Application()
 const router = new Router();
 
@@ -41,12 +41,12 @@ router.get("/recent", recentHandler)
 
 router.get("/submit", submitHandler)
 
-router.get("/admin/posts/:page", isAdmin, relevantpostGetHandler)
-router.get("/admin/links", isAdmin, linksGetHandler)
-router.post("/admin/links/visibility", isAdmin, hideLinksPostHandler)
-router.post("/admin/pending/visibility", isAdmin, hidePostHandler)
-router.post("/admin/tweet/handle", isAdmin, addAuthorTwitterPostHandler)
-router.delete("/admin/tweet/handle", isAdmin, removeAuthorTwitterDeleteHandler)
+router.get("/admin/posts/:page", isAuthed, isAdmin, relevantpostGetHandler)
+router.get("/admin/links", isAuthed, isAdmin, linksGetHandler)
+router.post("/admin/links/visibility", isAuthed, isAdmin, hideLinksPostHandler)
+router.post("/admin/pending/visibility", isAuthed, isAdmin, hidePostHandler)
+router.post("/admin/tweet/handle", isAuthed, isAdmin, addAuthorTwitterPostHandler)
+router.delete("/admin/tweet/handle", isAuthed, isAdmin, removeAuthorTwitterDeleteHandler)
 
 router.post("/vote", hasCurrentUser, postVoteHandler)
 router.post("/submit", submitHandlerProcessor)

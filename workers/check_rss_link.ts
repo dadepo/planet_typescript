@@ -1,18 +1,12 @@
-import { DOMParser } from "../deps.ts";
-
+import { DOMParser } from "https://deno.land/x/deno_dom@v0.1.21-alpha/deno-dom-wasm.ts";
 import { db } from "../dao/db_connection.ts"
 import { RssLinkDao } from "../dao/rss_links_dao.ts"
 
+
 const rssLinkDao = new RssLinkDao(db)
 
-self.onmessage = async (e: any) => {
-    const { link } = e.data;
-    console.log("submitted " + link)
-    await processLink(link)
-    self.close();
-  };
-
 const processLink = async (link: string) => {
+
     const resp = await fetch(link)
     let contentOfLink = await resp.text()
 
@@ -38,3 +32,11 @@ const processLink = async (link: string) => {
 const isXML = (content: string) => {
     return content.includes("<?xml") || content.includes("xmlns")
 }
+
+
+self.onmessage = async (e: any) => {
+    const { link } = e.data;
+    console.log("submitted " + link)
+    await processLink(link)
+    self.close();
+};

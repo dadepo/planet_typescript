@@ -37,6 +37,7 @@ export const submitHandlerProcessor = async (ctx: RouterContext<"/submit">) => {
                         type: "module",
                         deno: {
                             namespace: true,
+                            permissions: "inherit",
                         }
                     } as any);
 

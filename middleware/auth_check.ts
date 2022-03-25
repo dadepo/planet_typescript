@@ -1,12 +1,11 @@
 import { verify } from "https://deno.land/x/djwt@v2.2/mod.ts"
 import {UserDao} from "../dao/users_dao.ts";
 import {db} from "../dao/db_connection.ts";
-import {config, RouterContext}  from "../deps.ts";
+import {config, RouterContext, RouterMiddleware}  from "../deps.ts";
 
 const userDao = new UserDao(db)
 
-
-export const isAuthed = async (ctx: RouterContext<"/" | "/index">, next: Function) => {
+export const isAuthed: RouterMiddleware<"/" | "/index"> = async (ctx, next) => {
     const jwtToken = await ctx.cookies.get("jwt");
     if (jwtToken) {
         const payload = await verify(jwtToken, config()["JWT_KEY"], "HS512")

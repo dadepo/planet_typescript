@@ -1,5 +1,5 @@
-import { DB,  v4 } from "../deps.ts";
-import { Result } from "../lib.ts"
+import { DB } from "https://deno.land/x/sqlite@v2.3.2/mod.ts"
+import { v4 } from "https://deno.land/std@0.94.0/uuid/mod.ts"
 
 export class RssLinkDao {
   constructor(private db: DB) {
@@ -9,7 +9,7 @@ export class RssLinkDao {
     );
   }
 
-  public saveSubmittedLink(website: string, rssLink: string): Result<boolean>  {
+  public saveSubmittedLink(website: string, rssLink: string) {
     try {
       this.db.query("INSERT INTO rss_links (website, rss_link, timestamp, uuid) VALUES (?, ?, ?, ?)", [website, rssLink, Date.now(), v4.generate()]);
       return {kind:"success", value: true};
