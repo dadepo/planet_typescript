@@ -1,6 +1,6 @@
 ### Planet TypeScript
 
-Code behind www.planettypescript.com.
+Code behind the decommissioned www.planettypescript.com.
 
 To run locally:
 
